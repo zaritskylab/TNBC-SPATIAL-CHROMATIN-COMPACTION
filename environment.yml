@@ -1,0 +1,28 @@
+name: tnbc_flim_test
+channels:
+  - bioconda
+  - pytorch
+  - conda-forge
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.11
+  - seaborn
+  - stardist
+  - py-xgboost
+  - scikit-learn
+  - lightgbm
+  - optuna
+  - shap
+  - ipykernel
+  - ipywidgets
+  - conda-forge::matplotlib-scalebar
+  - pip
+  - pip:
+      - jinja2
+      - torch
+      - torchvision
+      - torch-geometric
+      - triton
+      - propcache
+      - openpyxl 

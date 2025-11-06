@@ -936,7 +936,7 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
 
         auc_score, fpr, tpr, auc_agg, fpr_agg, tpr_agg, auc_agg_filter, fpr_agg_filter, tpr_agg_filter = results
 
-        print("\n Finished logging to Neptune")
+        # print("\n Finished logging to Neptune")
 
         seed_results_list.append({
             'seed_val': seed_val,

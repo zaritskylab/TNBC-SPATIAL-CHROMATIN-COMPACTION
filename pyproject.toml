@@ -6,27 +6,15 @@ build-backend = "setuptools.build_meta"
 name = "tnbc-flim"            # distribution name used by pip
 version = "0.1.0"
 description = "TNBC FLIM tools"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 authors = [{name = "Your Name"}]
 dependencies = [
-    "ipykernel==6.30.1",
-    "pandas==2.1.1",
-    "numpy==1.26.4",
-    "joblib==1.2.0",
-    "openpyxl==3.1.5",
-    "scikit-learn==1.1.2",
-    "seaborn==0.11.0",
-    "matplotlib==3.8.0",
-    "matplotlib-scalebar==0.9.0",
-    "scikit-image==0.25.2",
+
 ]
 
 
 [project.optional-dependencies]
-stardist = ["stardist==0.9.1", "tensorflow==2.18.0"]
-torch = ["torch==2.4.1", "torch-geometric==2.6.1"]
-all = ["stardist==0.9.1", "torch==2.4.1", "torch-geometric==2.6.1"]
 
 
 [tool.setuptools.packages.find]
