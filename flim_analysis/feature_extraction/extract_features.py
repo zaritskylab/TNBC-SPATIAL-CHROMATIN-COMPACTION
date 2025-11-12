@@ -948,15 +948,15 @@ if __name__ == '__main__':
 
     # Positional with default (optional via nargs='?')
     parser.add_argument('sample_type', choices=['core', 'resection', 'patch'], nargs='?', default='core',
-        help="What to process. Default: core"
+        help="Type of sample to process. Choices: 'core', 'resection', 'patch'. Default: 'core'."
     )
 
     parser.add_argument('--patch-size', type=int, default=1500,
-        help="Patch size (used when --task-id not given). Default: 1500"
+        help="Size (in pixels) of the patch used in patch-level processing. Only used if sample_type is 'patch'. Default: 1500."
     )
 
     parser.add_argument('--overlap', type=float, default=0.75,
-        help="Patch overlap 0–1 (used when --task-id not given). Default: 0.75"
+        help="Fractional overlap between adjacent patches (0.0 to 1.0). Only used if sample_type is 'patch'. Default: 0.75."
     )
 
     args = parser.parse_args()

@@ -7,17 +7,17 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Create lifetime distributions and medians')
     parser.add_argument('sample_type', choices=['core', 'resection', 'patch'],
-                        nargs='?', default='core', help="Default: core")
+                        nargs='?', default='core', help="Type of sample to process. Choices: 'core', 'resection', 'patch'. Default: 'core'.")
 
     parser.add_argument('--max-val',   type=float, default=13,
-                        help='Default: 13')
+                        help="Maximum lifetime value for binning (used in lifetime distribution calculations). Default: 13.")
     parser.add_argument('--bin-range', type=float, default=0.73,
-                        help='Default: 0.73')
+                        help="Range of each bin in the lifetime distribution histogram. Smaller values increase the number of bins. Default: 0.73.")
 
     parser.add_argument('--patch-size', type=int,   default=1500,
-                        help='Default: 1500 (used for patch)')
+                        help="Size (in pixels) of the patch used in patch-level processing. Only used if sample_type is 'patch'. Default: 1500.")
     parser.add_argument('--overlap',    type=float, default=0.75,
-                        help='Default: 0.75 (used for patch)')
+                        help="Fractional overlap between adjacent patches (0.0 to 1.0). Only used if sample_type is 'patch'. Default: 0.75.")
 
     args = parser.parse_args()
 
