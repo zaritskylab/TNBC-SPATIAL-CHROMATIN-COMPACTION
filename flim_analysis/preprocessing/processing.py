@@ -6,17 +6,16 @@ from utils.auxiliary_func import*
 from utils.data_func import*
 
 
-# %% [markdown]
-# ### FLIM Data Preprocessing — Channel Splitting
-# 
-# In this step of the TNBC FLIM tissue analysis pipeline, we preprocess the raw `.tif` images by **splitting two-channel FLIM images into separate files**:
-# - **Fluorescence intensity channel**
-# - **Fluorescence lifetime channel**
-# 
-# Each `.tif` file from the specified directory contains two interleaved image channels.  
-# The function `split_2_channel_to_1` is applied to **all `.tif` files** in the directory to perform this separation, storing the results in predefined output folders.
+'''
+FLIM Data Preprocessing — Channel Splitting
 
-# %%
+In this step of the TNBC FLIM tissue analysis pipeline, we preprocess the raw `.tif` images by **splitting two-channel FLIM images into separate files**:
+    - **Fluorescence intensity channel**
+    - **Fluorescence lifetime channel**
+
+Each `.tif` file from the specified directory contains two interleaved image channels.  
+The function `split_2_channel_to_1` is applied to **all `.tif` files** in the directory to perform this separation, storing the results in predefined output folders.
+'''
 
 
 def extract_leap_number_and_threshold(file_name):
@@ -105,3 +104,6 @@ def run_preprocess():
         
         print(f"Preprocessing complete: {len(tif_files)} files processed from {raw_data_dir}.")
 
+
+if __name__ == '__main__':
+    run_preprocess()

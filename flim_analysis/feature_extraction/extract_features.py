@@ -13,6 +13,7 @@ import os
 
 from utils.data_func import*
 import config.const as const
+import config.params as params
 
 import pandas as pd
 from tifffile import tifffile 
@@ -21,6 +22,7 @@ import numpy as np
 from sklearn.neighbors import NearestNeighbors
 from joblib import Parallel, delayed
 from skimage.measure import regionprops
+import argparse
 
 
 # --------------------------------------
@@ -938,3 +940,36 @@ def aggregate_median_features_by_leap(output_dir: str, sample_type: str = 'core'
     print("File saved successfully.")
 
     return median_df
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Extract features FLIM images.')
+
+    # Positional with default (optional via nargs='?')
+    parser.add_argument('sample_type', choices=['core', 'resection', 'patch'], nargs='?', default='core',
+        help="What to process. Default: core"
+    )
+
+    parser.add_argument('--patch-size', type=int, default=1500,
+        help="Patch size (used when --task-id not given). Default: 1500"
+    )
+
+    parser.add_argument('--overlap', type=float, default=0.75,
+        help="Patch overlap 0–1 (used when --task-id not given). Default: 0.75"
+    )
+
+    args = parser.parse_args()
+
+    if args.sample_type == 'core':
+        create_all_feature_core_full_tissue_df()
+
+    elif args.sample_type == 'resection':
+        create_all_feature_resection_full_tissue_df()
+
+    elif args.sample_type == 'patch':
+
+        patch_size = args.patch_size
+        overlap    = args.overlap
+
+        create_all_feature_patches_df(patch_size, overlap)

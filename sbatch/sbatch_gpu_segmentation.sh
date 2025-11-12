@@ -16,6 +16,6 @@ echo "SLURM_JOB_NODELIST"=$SLURM_JOB_NODELIST
 
 ### Start you code below ####
 module load anaconda              ### load anaconda module
-source activate flim_stardist     ### activating Conda environment, environment must be configured before running the job
+source activate tnbc_flim_test     ### activating Conda environment, environment must be configured before running the job
 
-python /home/reutme/TNBC_FLIM/flim_analysis/preprocessing/segmentation_main.py
+python /home/reutme/TNBC-SPATIAL-CHROMATIN-COMPACTION/flim_analysis/preprocessing/segmentation.py

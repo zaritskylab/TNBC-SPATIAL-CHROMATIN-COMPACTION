@@ -435,3 +435,8 @@ def process_leap_qc(leap_number, seg_dir_path):
     print(f"leap {leap_number}, lower num: {lower}, lower percent: {lower_percent}, upper num: {upper}, upper percent: {upper_percent}")
 
     return leap_name, lower_percent, upper_percent, lower, upper, l_area_list, u_area_list
+
+
+if __name__ == '__main__':
+    run_segmentation()
+    run_segmentation_qc()
