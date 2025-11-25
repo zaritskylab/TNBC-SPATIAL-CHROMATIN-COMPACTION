@@ -917,8 +917,36 @@ def plot_one_transition(leap_id, prob_coords, lifetime_and_prob_df, radius_list,
         # Plot shape on image
         plt.figure(figsize=(5, 5))
         ax = plt.gca()  # Get the current axes so we can add patches
+                # Add padding below each image for the scalebar
+        
+        img_padded = np.pad(
+            img, ((0, 2200), (0, 0)), mode='constant', constant_values=np.nan
+        )
 
+        cmap_params = cm.get_cmap("cividis_r").copy()
+        cmap_params.set_bad(color='white')  # where NaN → white
+
+        masked_img = np.ma.masked_invalid(img_padded)
+
+        
+        ax.imshow(
+            masked_img,
+            cmap=cmap_params,
+            vmax=1.0,
+            vmin=0.0,
+            interpolation="nearest",
+        )
+
+        resolution = 1.139
+
+        scalebar = ScaleBar(
+            resolution, "µm", length_fraction=0.3, location="lower right",
+            box_alpha=0, width_fraction=0.02, font_properties={'size': 12}
+        )
         plt.imshow(img, cmap="cividis_r", vmax=val_max, vmin=val_min, interpolation="nearest")
+
+        ax.add_artist(scalebar)
+
         path_color = path_colors[idx]
         plt.plot(x_coord, y_coord, color=path_color, linewidth=0.5)
 
@@ -994,7 +1022,6 @@ def plot_one_transition(leap_id, prob_coords, lifetime_and_prob_df, radius_list,
             save_fig(figure_save_dir, save_file_name, 'pdf', plt, transparent=True)
 
         plt.show()
-
 
 def plot_transition_2_path_homo_region(leap_id, prob_coords, lifetime_and_prob_df, radius_list, radius_colors_dict, path_colors=['red', 'black'], figure_save_dir=None, save_plot=False, val_min=0, val_max=1):
     # prob_coords = pd.read_csv(prob_coords_leap_path)
@@ -1167,6 +1194,16 @@ def plot_transition_2_path_homo_hetro_region(leap_id, prob_coords, lifetime_and_
     ax_main.imshow(img, cmap="cividis_r", vmax=val_max, vmin=val_min, interpolation="nearest")
     ax_main.set_title("Mean Lifetime Across Spatial Transition (Radii Comparison)", fontsize=11)
 
+    pixel_size_um = 1.139
+    # Add scale bar
+    scalebar_main = ScaleBar(
+        dx=pixel_size_um, units="µm", location='lower right',
+        color='black', box_alpha=0, scale_loc='bottom'
+    )
+
+    scalebar_main.set_font_properties({"size": 10, "weight": "bold"})
+
+    ax_main.add_artist(scalebar_main)
 
     # Use Oranges for Homogeny, Blues for Heterogeny
     orange_cmap = truncate_cmap(cm.Oranges, 0.3, 0.8)
