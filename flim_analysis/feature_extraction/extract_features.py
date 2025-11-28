@@ -851,6 +851,51 @@ def build_lifetime_distribution_full_tissue(sample_type: str, max_range: float, 
 
     return df_bins
 
+def build_distribution(features_df, feature_name, bins_amount, sample_type):
+    """
+    Build and save a binned distribution of a selected FLIM feature.
+
+    Parameters
+    ----------
+    features_df : pd.DataFrame
+        DataFrame containing FLIM feature values.
+    feature_name : str
+        Name of the feature column to be binned (e.g., 'lifetime_mean').
+    bins_amount : int
+        Number of bins to divide the feature range into.
+
+    Returns
+    -------
+    pd.DataFrame
+        Binned distribution of the selected feature.
+    """
+
+    print(f"Building {feature_name} distribution...")
+
+    # Compute binning parameters
+    max_val = features_df[feature_name].max()
+    bin_range = max_val / bins_amount
+
+    print(f"{feature_name} histogram will use {bins_amount} bins of size {bin_range} ns, up to {max_val} ns.")
+    distribution_params = [feature_name, max_val, bin_range]
+    print(f"Distribution parameters: {distribution_params}")
+
+    # Generate binned distribution using create_X_y
+    _, _, df_bins = create_X_y(features_df, distribution_params)
+    bin_amount = len(df_bins.columns) - 2
+    print(f"Distribution built. Total bins created: {bin_amount}\n")
+
+    # Save distribution CSV
+    distribution_full_tissue = os.path.join(
+        const.full_tissue_dir, sample_type,
+        f"features_{feature_name}_distribution_data_max_val_{max_val}_bins_amount_{bin_amount}_bin_range_{bin_range:.3f}.csv"
+    )
+
+    print(f"Saving bin distribution to: {distribution_full_tissue}")
+    df_bins.to_csv(distribution_full_tissue, index=False)
+    print("Bin distribution CSV saved successfully.\n")
+
+    return df_bins
 
 
 def build_lifetime_distribution_patch(patch_size: int, patch_overlap: float, max_range: float=13, bin_range: float=0.73) -> pd.DataFrame:
