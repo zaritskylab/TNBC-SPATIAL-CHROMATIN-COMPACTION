@@ -9,17 +9,17 @@ from joblib import Parallel, delayed
 def create_X_y(features_df, feature_name, remain_ID=False, patches=False):
     print(f"Start with feature {feature_name[0]}")
 
+    max_range = feature_name[1]
+    bins_range = feature_name[2]
+    
     if feature_name[0] =='lifetime_mean':
         # 13, 0.585
-        max_range = feature_name[1]
-        max_range = feature_name[1]
-        bins_range = feature_name[2]
         column=['lifetime_mean',max_range, bins_range]
         feature_df_train = extract_features_each_leap(features_df.copy() ,column, is_patches=patches)
 
-    elif feature_name[0] =='aspect_ratio':
+    elif feature_name[0] =='eccentricity':
         # 1, 0.25
-        column=['aspect_ratio', max_range, bins_range]
+        column=['eccentricity', max_range, bins_range]
         feature_df_train = extract_features_each_leap(features_df.copy() ,column, is_patches=patches)
 
     elif feature_name[0] =='area':
