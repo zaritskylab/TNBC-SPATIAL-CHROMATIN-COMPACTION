@@ -8,9 +8,9 @@ import argparse
 import numpy as np
 import random
 
-primary_seed = 42
-np.random.seed(primary_seed)
-random.seed(primary_seed)
+
+np.random.seed(const.PRIMARY_SEED)
+random.seed(const.PRIMARY_SEED)
 
 
 if __name__ == '__main__':

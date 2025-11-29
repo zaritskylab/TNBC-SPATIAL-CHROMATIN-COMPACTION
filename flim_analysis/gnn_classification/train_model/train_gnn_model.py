@@ -4,7 +4,6 @@ from utils.data_func import *
 import config.const as const
 import config.params as params
 
-
 import torch
 import pandas as pd
 from torch_geometric.loader import DataLoader
@@ -25,7 +24,11 @@ from torch_geometric.nn import GATConv, global_mean_pool, global_max_pool
 import torch.nn.functional as F
 from torch.nn import BatchNorm1d, Linear, ModuleList, Dropout, ReLU
 from datetime import datetime
+import random
 
+
+np.random.seed(const.PRIMARY_SEED)
+random.seed(const.PRIMARY_SEED)
 
 # from model import GCN_Model
 
@@ -805,7 +808,7 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
     max_dist: int,
     k_out: int,
     model_params: dict,
-    primary_seed: int = 42,
+    seeds_amount: int = 20,
     aggregation: bool = True, 
     tissue_resolution: str = 'patch_tissue', 
     
@@ -832,15 +835,15 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
         Number of training epochs.
     iterations : int
         Number of different seed runs for robustness.
-    primary_seed : int
-        Main random seed for reproducibility.
+    seeds_amount : int
+        Number of seeds.
     aggregation : bool
         Whether to compute and evaluate aggregated predictions at LEAP level.
     """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-    evaluation_seeds = params.gnn_evaluation_seeds
+    evaluation_seeds = [random.randint(1, 10000) for _ in range(seeds_amount)]
     print(f"Evaluation seeds: {evaluation_seeds}")
 
 
@@ -984,49 +987,6 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
     print(f"Results saved to {output_file}")
     print(f"Finished processing max_dist={max_dist}")
 
-
-
-# def run_patch_gnn_pipeline(
-#     feature_type: str,
-#     patch_size: int,
-#     overlap: float,
-#     max_dist: int = 30,
-#     k_out: int = 5,
-#     epochs: int = 50,
-#     primary_seed: int = 42,
-#     aggregation: bool = True, 
-#     tissue_resolution: str = 'patch_tissue'
-#     ):
-#     """
-#     Full training pipeline for GNN evaluation on patch-level FLIM data.
-
-#     Loads preprocessed PyTorch Geometric data, trains multiple models across seeds,
-#     and evaluates performance with and without aggregation.
-
-#     Parameters
-#     ----------
-#     feature_type : str
-#         Type of features to use (e.g., "lifetime").
-#     patch_size : int
-#         Size of the image patch in pixels.
-#     overlap : float
-#         Patch overlap as a float between 0 and 1.
-#     max_dist : int
-#         Max distance threshold for edge creation in graphs.
-#     k_out : int
-#         Number of outer folds for cross-validation.
-#     epochs : int
-#         Number of training epochs.
-#     iterations : int
-#         Number of different seed runs for robustness.
-#     primary_seed : int
-#         Main random seed for reproducibility.
-#     aggregation : bool
-#         Whether to compute and evaluate aggregated predictions at LEAP level.
-#     """
-
-#     for _, model_params in params.model_params_dict.items():
-#         run_patch_gnn_pipeline_per_one_model_parameters(feature_type, patch_size, overlap, max_dist, k_out, epochs, model_params, aggregation, tissue_resolution)    
 
 
 def run_patch_gnn_pipeline_per_one_model_parameters_shuffling(
@@ -1261,5 +1221,4 @@ def run_patch_gnn_pipeline_per_one_model_parameters_structure(
     seed_results_path = os.path.join(seed_dir, "seed_results.pkl")
     seed_results_df.to_pickle(seed_results_path)
     print(f"Saved seed-level results at {seed_results_path}")
-
 
