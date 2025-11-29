@@ -4,7 +4,7 @@
 #SBATCH --time 3-11:30:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name=build_graphs                   ### name of the job. replace my_job with your desired job name
 #SBATCH --output out/my_job-id-%A_%a.out  # Output log (%A: Job Array ID, %a: Task ID)
-#SBATCH --mail-user=reutme@post.bgu.ac.il      ### users email for sending job status notifications
+#SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --mem=128G				### ammount of RAM memory
 #SBATCH --cpus-per-task=6
