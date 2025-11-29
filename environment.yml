@@ -1,4 +1,4 @@
-name: tnbc_flim_test
+name: tnbc_flim
 channels:
   - bioconda
   - pytorch
@@ -17,6 +17,7 @@ dependencies:
   - ipykernel
   - ipywidgets
   - conda-forge::matplotlib-scalebar
+  - pyarrow 
   - pip
   - pip:
       - jinja2
