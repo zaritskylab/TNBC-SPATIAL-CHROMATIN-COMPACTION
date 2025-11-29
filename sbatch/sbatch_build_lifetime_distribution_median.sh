@@ -4,7 +4,7 @@
 #SBATCH --time 3-11:30:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name create_median_and_lifetime_distribution      ### name of the job. replace my_job with your desired job name
 #SBATCH --array=0-4                             
-#SBATCH --output logs/%x_%A_%a.out               # e.g., logs/extract_features_123456_0.out
+#SBATCH --output out/%x_%A_%a.out               # e.g., logs/extract_features_123456_0.out
 #SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --mem=64G				### ammount of RAM memory

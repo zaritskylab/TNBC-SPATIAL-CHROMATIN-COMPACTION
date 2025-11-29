@@ -3,7 +3,7 @@
 #SBATCH --partition main                         ### specify partition name where to run a job. short - 7 days time limit; debug – for testing - 2 hours and 1 job at a time
 #SBATCH --time 3-11:30:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name extract_features      ### name of the job. replace my_job with your desired job name                             
-#SBATCH --output logs/%x_%j.out               # e.g., logs/extract_features_123456_0.out
+#SBATCH --output out/%x_%j.out               # e.g., logs/extract_features_123456_0.out
 #SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --mem=64G				### ammount of RAM memory

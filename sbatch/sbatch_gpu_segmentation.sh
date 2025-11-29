@@ -3,7 +3,7 @@
 #SBATCH --partition main                         ### specify partition name where to run a job. short - 7 days time limit; debug – for testing - 2 hours and 1 job at a time
 #SBATCH --time 1-00:00:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name segmentation_process          ### name of the job. replace my_job with your desired job name
-#SBATCH --output my_job-id-%J.out                ### output log for running job - %J is the job number variable
+#SBATCH --output out/my_job-id-%J.out                ### output log for running job - %J is the job number variable
 #SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --gpus=1
