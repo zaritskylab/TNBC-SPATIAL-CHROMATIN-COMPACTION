@@ -4,7 +4,7 @@
 #SBATCH --time 1-00:00:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name segmentation_process          ### name of the job. replace my_job with your desired job name
 #SBATCH --output my_job-id-%J.out                ### output log for running job - %J is the job number variable
-#SBATCH --mail-user=reutme@post.bgu.ac.il      ### users email for sending job status notifications
+#SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --gpus=1
 #SBATCH --gpus=rtx_6000:1
@@ -16,6 +16,8 @@ echo "SLURM_JOB_NODELIST"=$SLURM_JOB_NODELIST
 
 ### Start you code below ####
 module load anaconda              ### load anaconda module
-source activate tnbc_flim_test     ### activating Conda environment, environment must be configured before running the job
+source activate tnbc_flim_test    ### activate a conda environment, replace my_env with your conda environment
 
-python /home/reutme/TNBC-SPATIAL-CHROMATIN-COMPACTION/flim_analysis/preprocessing/segmentation.py
+cd "$SLURM_SUBMIT_DIR"
+cd "TNBC-SPATIAL-CHROMATIN-COMPACTION"
+python flim_analysis/preprocessing/segmentation.py

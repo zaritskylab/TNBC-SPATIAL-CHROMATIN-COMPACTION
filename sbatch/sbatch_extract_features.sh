@@ -4,7 +4,7 @@
 #SBATCH --time 3-11:30:00                      ### limit the time of job running. Make sure it is not greater than the partition time limit!! Format: D-H:MM:SS
 #SBATCH --job-name extract_features      ### name of the job. replace my_job with your desired job name                             
 #SBATCH --output logs/%x_%j.out               # e.g., logs/extract_features_123456_0.out
-#SBATCH --mail-user=reutme@post.bgu.ac.il      ### users email for sending job status notifications
+#SBATCH --mail-user=user@post.bgu.ac.il      ### users email for sending job status notifications
 #SBATCH --mail-type=END,FAIL            ### conditions when to send the email. ALL,BEGIN,END,FAIL, REQUEU, NONE
 #SBATCH --mem=64G				### ammount of RAM memory
 #SBATCH --cpus-per-task=15
@@ -15,9 +15,12 @@ echo "SLURM_JOB_NODELIST"=$SLURM_JOB_NODELIST
 
 ### Start you code below ####
 module load anaconda              ### load anaconda module
-source activate tnbc_flim_test    ### activating Conda environment, environment must be configured before running the job
+source activate tnbc_flim_test    ### activate a conda environment, replace my_env with your conda environment
 
-PY="/home/reutme/TNBC-SPATIAL-CHROMATIN-COMPACTION/flim_analysis/feature_extraction/extract_features.py"
+
+cd "$SLURM_SUBMIT_DIR"
+cd "TNBC-SPATIAL-CHROMATIN-COMPACTION"
+PY="flim_analysis/feature_extraction/extract_features.py"
 
 sample_type=$1     ### sample_type must be: core | resection | patch
 
