@@ -121,11 +121,11 @@ if __name__ == '__main__':
   print(f"Running FLIM patch-wise classification pipeline...")
 
   # Load metadata
-  metadata_df = load_metadata(const.rcb_file)
+  metadata_df = load_metadata(const.RCB_FILE)
 
   # Load lifetime distribution data
   distribution_csv_path = Path(
-      const.patch_dir
+      const.PATCH_DIR
   ) / f"size_{args.patch_size}_overlap_0.75" / args.dist_csv_name
   if not distribution_csv_path.exists():
     raise FileNotFoundError(
@@ -165,7 +165,7 @@ if __name__ == '__main__':
   # cv_strategy = "loocv"
   cv_strategy = "stratified_kfold"
   save_dir = (
-      Path(const.distribution_results_base_dir) / "classification_results" /
+      Path(const.DISTRIBUTION_RESULTS_BASE_DIR) / "classification_results" /
       "patch_wise" / distribution_csv_path.stem / cv_strategy
   )
   save_dir.mkdir(parents=True, exist_ok=True)

@@ -1,30 +1,35 @@
 import os
 
-data_dir = r'/sise/assafzar-group/assafzar/leor/delta_tissue_maddy/data/tnbc_organised/4_FLIM'
-raw_data_dir = os.path.join(data_dir, 'raw')
-seg_dir = os.path.join(data_dir, 'segmentations')
-seg_after_qc_dir = os.path.join(data_dir, 'segmentations_after_qc')
+DATA_DIR = r'/sise/assafzar-group/assafzar/leor/delta_tissue_maddy/data/tnbc_organised/4_FLIM'
+RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
+# SEG_DIR = os.path.join(DATA_DIR, 'segmentations')
+# SEG_AFTER_QC_DIR = os.path.join(DATA_DIR, 'segmentations_after_qc')
 
 
-base_dir =  r'path/to/your/full/analysis'
-# seg_dir = os.path.join(base_dir, 'segmentations')
-# seg_after_qc_dir = os.path.join(base_dir, 'segmentations_after_qc')
-single_cell_feature_dir = os.path.join(base_dir, 'leap_single_cell_features')
-fluorescent_dir = os.path.join(base_dir, 'fluorescent_channel')
-flim_dir = os.path.join(base_dir, 'flim_channel')
-patch_dir = os.path.join(base_dir, 'patches_tissue')
-full_tissue_dir = os.path.join(base_dir, 'full_tissue')
-gnn_dir = os.path.join(base_dir, 'gnn')
-spatial_dir = os.path.join(base_dir, 'spatial')
-rcb_file = os.path.join(base_dir, 'tnbc_dataset.xlsx')
-flim_model_probability_dir = os.path.join(base_dir, 'flim_model_probability')
-single_nuclei_lifetime_dir = os.path.join(base_dir, 'single_nuclei_lifetime')
+BASE_DIR =  r'/sise/assafzar-group/assafzar/reut/Test_FLIM/from_FLIM_dir'
+SEG_DIR = os.path.join(BASE_DIR, 'segmentations')
+SEG_AFTER_QC_DIR = os.path.join(BASE_DIR, 'segmentations_after_qc')
+FLUORESCENT_DIR = os.path.join(BASE_DIR, 'fluorescent_channel')
+FLIM_DIR = os.path.join(BASE_DIR, 'flim_channel')
+PATCH_DIR = os.path.join(BASE_DIR, 'patches_tissue')
+FULL_TISSUE_DIR = os.path.join(BASE_DIR, 'full_tissue')
+GNN_DIR = os.path.join(BASE_DIR, 'gnn')
+SPATIAL_DIR = os.path.join(BASE_DIR, 'spatial')
+RCB_FILE = os.path.join(BASE_DIR, 'tnbc_dataset.xlsx')
+FLIM_MODEL_PROBABILITY_DIR = os.path.join(BASE_DIR, 'flim_model_probability')
+SINGLE_NUCLEI_LIFETIME_DIR = os.path.join(BASE_DIR, 'single_nuclei_lifetime')
 
 
+DISTRIBUTION_RESULTS_BASE_DIR = r'path/to/your/lifetime/distribution/results'
+
+DISTRIBUTION_RESULTS_FULL_TISSUE_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, '18_bins_new/xgboost', 'tissue_wise')
+DISTRIBUTION_RESULTS_PATCH_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, '18_bins_new/xgboost', 'patch_wise')
+
+DATA_PREPARATION_DIR = os.path.join(BASE_DIR, 'figure_results', 'data_preparation')
+os.makedirs(DATA_PREPARATION_DIR, exist_ok=True)
+
+FIGURE_SUPPLEMENTARY_DIR = os.path.join(BASE_DIR, 'figure_results', 'Supplementary')
+os.makedirs(FIGURE_SUPPLEMENTARY_DIR, exist_ok=True)
 
 
-distribution_results_base_dir = r'path/to/your/lifetime/distribution/results'
-
-distribution_results_full_tissue_dir = os.path.join(distribution_results_base_dir, '18_bins_new/xgboost', 'tissue_wise')
-distribution_results_patch_dir = os.path.join(distribution_results_base_dir, '18_bins_new/xgboost', 'patch_wise')
-
+PRIMARY_SEED = 42

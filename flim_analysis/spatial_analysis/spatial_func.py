@@ -238,7 +238,7 @@ def extract_gnn_results(
     # 1. Build the paths
     patch_params = f"size_{patch_size}_overlap_{overlap}"
     graph_file_dir = os.path.join(
-        const.gnn_dir, feature_type, tissue_resolution, f"max_distance_{max_dist}", "pytorch_geo"
+        const.GNN_DIR, feature_type, tissue_resolution, f"max_distance_{max_dist}", "pytorch_geo"
     )
     model_results_pytorch_geo_dir = os.path.join(graph_file_dir, patch_params, "results", date_time)
 

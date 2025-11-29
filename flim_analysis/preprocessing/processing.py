@@ -56,15 +56,15 @@ def split_2_channel_to_1(directory, file_name):
 
     leap_num = extract_leap_number(file_name)
 
-    os.makedirs(const.fluorescent_dir, exist_ok=True)
+    os.makedirs(const.FLUORESCENT_DIR, exist_ok=True)
     print(f"LEAP {leap_num} - start split to fluorescent and flim channels\n")
-    fluorescent_path = os.path.join(const.fluorescent_dir, f'LEAP{leap_num}_fluorescent.tif')
+    fluorescent_path = os.path.join(const.FLUORESCENT_DIR, f'LEAP{leap_num}_fluorescent.tif')
     if os.path.exists(fluorescent_path):
         print(f"File exists: {fluorescent_path}\n")
         return
     
-    os.makedirs(const.flim_dir, exist_ok=True)
-    flim_path = os.path.join(const.flim_dir, f'LEAP{leap_num}_flim.tif')
+    os.makedirs(const.FLIM_DIR, exist_ok=True)
+    flim_path = os.path.join(const.FLIM_DIR, f'LEAP{leap_num}_flim.tif')
 
     channels_file_path = os.path.join(directory, file_name)
     img = io.imread(channels_file_path)
@@ -86,23 +86,23 @@ def split_2_channel_to_1(directory, file_name):
 
 def run_preprocess():
     
-    raw_data_dir = const.raw_data_dir
-    print(f"Files process start from {raw_data_dir}.")
+    RAW_DATA_DIR = const.RAW_DATA_DIR
+    print(f"Files process start from {RAW_DATA_DIR}.")
 
-    _, leaps_list, _ = extract_core_resection_from_tnbc(const.rcb_file)
+    _, leaps_list, _ = extract_core_resection_from_tnbc(const.RCB_FILE)
     print(f"Loaded {len(leaps_list)} LEAP(s) from RCB file.")
 
 
     # List all .tif files in the directory
-    tif_files = [f for f in os.listdir(raw_data_dir) if f.endswith('.tif')]
+    tif_files = [f for f in os.listdir(RAW_DATA_DIR) if f.endswith('.tif')]
 
     for leap_id in leaps_list:
         # Apply the function to each file
         for tif_file in tif_files:
             if leap_id in tif_file:
-                split_2_channel_to_1(raw_data_dir, tif_file)
+                split_2_channel_to_1(RAW_DATA_DIR, tif_file)
         
-        print(f"Preprocessing complete: {len(tif_files)} files processed from {raw_data_dir}.")
+        print(f"Preprocessing complete: {len(tif_files)} files processed from {RAW_DATA_DIR}.")
 
 
 if __name__ == '__main__':

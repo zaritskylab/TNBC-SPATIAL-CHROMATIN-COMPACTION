@@ -111,7 +111,7 @@ def create_subgraphs_df(graphs_data):
     pd.DataFrame
         DataFrame with columns: ['graph_ID', 'leap_ID', 'category']
     """
-    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.rcb_file)
+    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.RCB_FILE)
     df_category_with_rcb.head()
     # Determine responder status (1 for responder, 0 for non-responder)
     df_category_with_rcb['responder'] = df_category_with_rcb['category'].apply(lambda x: 1 if x == "responder" else 0)
@@ -266,13 +266,13 @@ def create_gnn_data_subgraphs(feature_type, max_dist, nodes_samples, k, subgraph
     subgraphs_num : int
         Total number of subgraphs.
     """
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'full_tissue', f"max_distance_{max_dist}", 'graphs_data')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'full_tissue', f"max_distance_{max_dist}", 'graphs_data')
     subgraphs_params = f"subgraphs_{subgraphs_num}_nodes_samples_{nodes_samples}_k_hops_{k}"
     graphs_mapping_files = os.path.join(graph_file_dir, f"subgraphs_mapping_files_{subgraphs_params}.pkl")
     with open(graphs_mapping_files, 'rb') as file:
         graphs = pickle.load(file)
         
-    save_dir = os.path.join(const.gnn_dir, feature_type, 'full_tissue', f"max_distance_{max_dist}", 'pytorch_geo', subgraphs_params, 'data')
+    save_dir = os.path.join(const.GNN_DIR, feature_type, 'full_tissue', f"max_distance_{max_dist}", 'pytorch_geo', subgraphs_params, 'data')
     
     create_gnn_data(save_dir, graphs)
 
@@ -293,14 +293,14 @@ def create_gnn_data_patches(feature_type, max_dist, patch_size, overlap):
         Patch overlap ratio.
     """
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data')
 
     graphs_mapping_files = os.path.join(graph_file_dir, f"graphs_mapping_files_{patch_params}.pkl")
 
     with open(graphs_mapping_files, 'rb') as file:
         graphs = pickle.load(file)
 
-    save_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', patch_params, 'data')
+    save_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', patch_params, 'data')
 
     create_gnn_data(save_dir, graphs)
 
@@ -324,14 +324,14 @@ def create_gnn_data_patches_shuffling(feature_type, max_dist, patch_size, overla
         Random value for shuffling.
     """
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'shuffling_lifetime', f'{seed}')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'shuffling_lifetime', f'{seed}')
 
     graphs_mapping_files = os.path.join(graph_file_dir, f"graphs_mapping_files_{patch_params}.pkl")
 
     with open(graphs_mapping_files, 'rb') as file:
         graphs = pickle.load(file)
 
-    save_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'shuffling_lifetime', patch_params, 'data', f'{seed}')
+    save_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'shuffling_lifetime', patch_params, 'data', f'{seed}')
 
     create_gnn_data(save_dir, graphs)
 
@@ -352,13 +352,13 @@ def create_gnn_data_patches_structure(feature_type, max_dist, patch_size, overla
         Patch overlap ratio.
     """
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'structure_only')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'structure_only')
 
     graphs_mapping_files = os.path.join(graph_file_dir, f"graphs_mapping_files_{patch_params}.pkl")
 
     with open(graphs_mapping_files, 'rb') as file:
         graphs = pickle.load(file)
 
-    save_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'structure_only', patch_params, 'data')
+    save_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'structure_only', patch_params, 'data')
 
     create_gnn_data(save_dir, graphs)

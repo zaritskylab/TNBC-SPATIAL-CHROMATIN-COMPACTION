@@ -111,7 +111,7 @@ def save_fig(save_file_path, save_file_name, format_type, plt_fig, transparent=T
 def read_patches_files(patch_size, patch_overlap):
     # Construct file and directory paths
     patch_features_file_name = f"FLIM_features_patches_size_{patch_size}_overlap_{patch_overlap}_after_filter.csv"
-    specific_patch_dir = os.path.join(const.patch_dir, f"size_{patch_size}_overlap_{patch_overlap}")
+    specific_patch_dir = os.path.join(const.PATCH_DIR, f"size_{patch_size}_overlap_{patch_overlap}")
     patch_features_path = os.path.join(specific_patch_dir, patch_features_file_name)
 
     # Read the patch DataFrame

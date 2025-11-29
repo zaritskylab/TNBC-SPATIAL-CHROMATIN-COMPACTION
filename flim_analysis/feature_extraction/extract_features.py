@@ -378,8 +378,8 @@ def process_leap(leap_number, sample_type, morphology=True):
     try:
         print(f"Start with leap {leap_number}")
 
-        flim_image_path = os.path.join(const.flim_dir, f'LEAP{leap_number}_flim.tif')
-        seg_image_path = os.path.join(const.seg_after_qc_dir, f'LEAP{leap_number}_segmentation_labels_qc.tif')
+        flim_image_path = os.path.join(const.FLIM_DIR, f'LEAP{leap_number}_flim.tif')
+        seg_image_path = os.path.join(const.SEG_AFTER_QC_DIR, f'LEAP{leap_number}_segmentation_labels_qc.tif')
         
         segmentation_image = tifffile.imread(seg_image_path)
         flim_image = tifffile.imread(flim_image_path)
@@ -396,7 +396,7 @@ def process_leap(leap_number, sample_type, morphology=True):
         # Save DataFrame as CSV
         file_name = f"LEAP{leap_number}_single_cell_features.csv"
 
-        save_dir = os.path.join(const.full_tissue_dir, sample_type)
+        save_dir = os.path.join(const.FULL_TISSUE_DIR, sample_type)
         os.makedirs(save_dir, exist_ok=True)  # Create the directory if it doesn't exist
         save_path = os.path.join(save_dir, file_name)
         props_df.to_csv(save_path, index=False)
@@ -428,7 +428,7 @@ def process_all_features_full_tissue_df(df_category, sample_type, delete_concat_
     """
     print(f"Start concatenation for full tissue image")
     
-    sample_type_directory = os.path.join(const.full_tissue_dir, sample_type)
+    sample_type_directory = os.path.join(const.FULL_TISSUE_DIR, sample_type)
     combined_df = concatenate_all_files(sample_type_directory, file_signature="single_cell_features.csv", delete_files=delete_concat_files)
 
     combined_df_with_label = add_label_to_df(df_category, combined_df)
@@ -477,7 +477,7 @@ def create_all_feature_core_full_tissue_df(sample_type='core', with_mae=True):
     -------
     None
     """
-    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.rcb_file)
+    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.RCB_FILE)
     df_category_with_rcb.head()
 
     core_leaps_list = df_category_with_rcb[df_category_with_rcb['sample_type'] == sample_type]['leap_ID'].to_list()
@@ -498,7 +498,7 @@ def create_all_feature_resection_full_tissue_df(sample_type='resection'):
     -------
     None
     """
-    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.rcb_file)
+    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.RCB_FILE)
     df_category_with_rcb.head()
 
     resection_leaps_list = df_category_with_rcb[df_category_with_rcb['sample_type'] == sample_type]['leap_ID'].to_list()
@@ -628,14 +628,14 @@ def process_patches_for_leap(leap_number, patch_size, overlap=0, morphology=Fals
     """
     print(f"start with leap number {leap_number}")
 
-    flim_image_path = os.path.join(const.flim_dir, f'LEAP{leap_number}_flim.tif')
-    seg_image_path = os.path.join(const.seg_after_qc_dir, f'LEAP{leap_number}_segmentation_labels_qc.tif')
+    flim_image_path = os.path.join(const.FLIM_DIR, f'LEAP{leap_number}_flim.tif')
+    seg_image_path = os.path.join(const.SEG_AFTER_QC_DIR, f'LEAP{leap_number}_segmentation_labels_qc.tif')
     
     segmentation_image = tifffile.imread(seg_image_path)
     flim_image = tifffile.imread(flim_image_path)
 
 
-    patches_dir = os.path.join(const.patch_dir, f"size_{patch_size}_overlap_{overlap}")
+    patches_dir = os.path.join(const.PATCH_DIR, f"size_{patch_size}_overlap_{overlap}")
 
     if not os.path.exists(patches_dir):
         os.makedirs(patches_dir)
@@ -730,7 +730,7 @@ def process_all_feature_patches_df(patch_size, overlap, df_category, full_tissue
     """
     print(f"Start concatenation for patch size {patch_size}, overlap {overlap}")
     
-    patches_dir = os.path.join(const.patch_dir, f"size_{patch_size}_overlap_{overlap}")
+    patches_dir = os.path.join(const.PATCH_DIR, f"size_{patch_size}_overlap_{overlap}")
     combined_df = concatenate_all_files(patches_dir, file_signature="single_cell_features.csv")
 
     combined_df_with_label = add_label_to_df(df_category, combined_df)
@@ -775,7 +775,7 @@ def create_all_feature_patches_df(patch_size, overlap):
     -------
     None
     """
-    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.rcb_file)
+    df_category_with_rcb, _, _ = extract_core_resection_from_tnbc(const.RCB_FILE)
     df_category_with_rcb.head()
 
     core_leaps_list = df_category_with_rcb[df_category_with_rcb['sample_type'] == 'core']['leap_ID'].to_list()
@@ -784,8 +784,8 @@ def create_all_feature_patches_df(patch_size, overlap):
 
     try:
         _ = Parallel(n_jobs=-1, timeout=10000)(delayed(process_patches_for_leap)(leap_number, patch_size=patch_size, overlap=overlap) for leap_number in core_leaps_list)
-        # df_file_path = os.path.join(const.full_tissue_dir, 'core', "FLIM_features_full_tissue_with_mae.csv")
-        df_file_path = os.path.join(const.full_tissue_dir, 'core', "FLIM_features_full_tissue.csv")
+        # df_file_path = os.path.join(const.FULL_TISSUE_DIR, 'core', "FLIM_features_full_tissue_with_mae.csv")
+        df_file_path = os.path.join(const.FULL_TISSUE_DIR, 'core', "FLIM_features_full_tissue.csv")
 
 
         full_tissue_features_df = pd.read_csv(df_file_path, dtype = {'leap_ID': str})
@@ -826,7 +826,7 @@ def build_lifetime_distribution_full_tissue(sample_type: str, max_range: float, 
     print()
 
     # Load data
-    df_file_path = os.path.join(const.full_tissue_dir, sample_type, feature_file_name)
+    df_file_path = os.path.join(const.FULL_TISSUE_DIR, sample_type, feature_file_name)
     print(f"Reading FLIM feature file from: {df_file_path}")
     full_tissue_features_df = pd.read_csv(df_file_path, dtype={'leap_ID': str})
     print("Data loaded successfully.\n")
@@ -841,7 +841,7 @@ def build_lifetime_distribution_full_tissue(sample_type: str, max_range: float, 
 
     # Save output
     lifetime_distribution_full_tissue = os.path.join(
-        const.full_tissue_dir, sample_type,
+        const.FULL_TISSUE_DIR, sample_type,
        f"features_lifetime_distribution_data_max_val_{max_range}_bins_amount_{bin_amount}_bin_range_{bin_range}.csv"
     )
 
@@ -887,7 +887,7 @@ def build_distribution(features_df, feature_name, bins_amount, sample_type):
 
     # Save distribution CSV
     distribution_full_tissue = os.path.join(
-        const.full_tissue_dir, sample_type,
+        const.FULL_TISSUE_DIR, sample_type,
         f"features_{feature_name}_distribution_data_max_val_{max_val}_bins_amount_{bin_amount}_bin_range_{bin_range:.3f}.csv"
     )
 
@@ -914,7 +914,7 @@ def build_lifetime_distribution_patch(patch_size: int, patch_overlap: float, max
     pd.DataFrame
         Lifetime distribution (binned) for patches.
     """
-    specific_patch_dir = os.path.join(const.patch_dir, f"size_{patch_size}_overlap_{patch_overlap}")
+    specific_patch_dir = os.path.join(const.PATCH_DIR, f"size_{patch_size}_overlap_{patch_overlap}")
     
     # Construct filtered file path
     filtered_file_name = f"FLIM_features_patches_size_{patch_size}_overlap_{patch_overlap}_after_filter.csv"

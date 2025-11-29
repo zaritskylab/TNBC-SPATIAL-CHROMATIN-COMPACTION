@@ -59,11 +59,11 @@ if __name__ == '__main__':
 
     if args.graph_type == 'gnn':
         print(f"start build graphs for patch size {patch_size}, overlap {overlap}")
-        df_file_path = os.path.join(const.patch_dir, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
+        df_file_path = os.path.join(const.PATCH_DIR, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
         patch_tissue_features_df = pd.read_csv(df_file_path, dtype = {'leap_ID': str})
         
         print(f"start max distance {max_dist}")
-        graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data')
+        graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data')
         graphs = create_patches_graphs_parallel(patch_tissue_features_df, ['leap_ID', 'patch_ID'], feature_type, max_dist, save_dir=graph_file_dir, local_params=f'size_{patch_size}_overlap_{overlap}')
         print(f"finish max distance {max_dist}")
         
@@ -72,13 +72,13 @@ if __name__ == '__main__':
 
     elif args.graph_type == 'structure_gnn':
         print(f"start build graphs for patch size {patch_size}, overlap {overlap}")
-        df_file_path = os.path.join(const.patch_dir, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
+        df_file_path = os.path.join(const.PATCH_DIR, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
         patch_tissue_features_df = pd.read_csv(df_file_path, dtype = {'leap_ID': str})
 
         patch_tissue_features_df['lifetime_mean'] = 0
 
         print(f"start max distance {max_dist}")
-        graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'structure_only')
+        graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'structure_only')
 
         graphs = create_patches_graphs_parallel(patch_tissue_features_df, ['leap_ID', 'patch_ID'], feature_type, max_dist, save_dir=graph_file_dir, local_params=f'size_{patch_size}_overlap_{overlap}')
         print(f"finish max distance {max_dist}")
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         seeds_amount = args.n_seeds
         seeds = [random.randint(1, 10000) for _ in range(seeds_amount)]
         print(f"start shuffle + build graphs for patch size {patch_size}, overlap {overlap}")
-        df_file_path = os.path.join(const.patch_dir, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
+        df_file_path = os.path.join(const.PATCH_DIR, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
         patch_tissue_features_df = pd.read_csv(df_file_path, dtype = {'leap_ID': str})
 
         for seed in seeds:
@@ -107,7 +107,7 @@ if __name__ == '__main__':
                 .transform(shuffle_group)
             )
 
-            shuffling_df_dir_path = os.path.join(const.patch_dir, f'size_{patch_size}_overlap_{overlap}', 'shuffling_lifetime', f'{seed}')
+            shuffling_df_dir_path = os.path.join(const.PATCH_DIR, f'size_{patch_size}_overlap_{overlap}', 'shuffling_lifetime', f'{seed}')
             os.makedirs(shuffling_df_dir_path, exist_ok=True)
             filename = f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_shuffling.parquet"
             file_path = os.path.join(shuffling_df_dir_path, filename)
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
             print(f"start build graphs for patch size {patch_size}, overlap {overlap}")
             print(f"start max distance {max_dist}")
-            graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'shuffling_lifetime', f'{seed}')
+            graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'graphs_data', 'shuffling_lifetime', f'{seed}')
             graphs = create_patches_graphs_parallel(shuffling_features_df, ['leap_ID', 'patch_ID'], feature_type, max_dist, save_dir=graph_file_dir, local_params=f'size_{patch_size}_overlap_{overlap}')
             print(f"finish max distance {max_dist}")
             print(f"finish build graphs for patch size {patch_size}, overlap {overlap}")

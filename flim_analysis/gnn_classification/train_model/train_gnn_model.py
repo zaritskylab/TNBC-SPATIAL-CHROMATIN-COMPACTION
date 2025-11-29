@@ -848,7 +848,7 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
 
 
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, tissue_resolution, f"max_distance_{max_dist}", 'pytorch_geo')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, tissue_resolution, f"max_distance_{max_dist}", 'pytorch_geo')
     data_pytorch_geo_dir = os.path.join(graph_file_dir, patch_params, 'data')
     mapping_df_file = os.path.join(data_pytorch_geo_dir, "graphs_df_pytorch_geo.pkl")
     data_file = os.path.join(data_pytorch_geo_dir, "data_pytorch_geo.pkl")
@@ -1033,7 +1033,7 @@ def run_patch_gnn_pipeline_per_one_model_parameters_shuffling(
 
 
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, tissue_resolution, f"max_distance_{max_dist}", 'pytorch_geo', 'shuffling_lifetime')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, tissue_resolution, f"max_distance_{max_dist}", 'pytorch_geo', 'shuffling_lifetime')
     data_pytorch_geo_dir = os.path.join(graph_file_dir, patch_params, 'data', f'{seed_shuffle_val}')
     mapping_df_file = os.path.join(data_pytorch_geo_dir, "graphs_df_pytorch_geo.pkl")
     data_file = os.path.join(data_pytorch_geo_dir, "data_pytorch_geo.pkl")
@@ -1150,7 +1150,7 @@ def run_patch_gnn_pipeline_per_one_model_parameters_structure(
 
 
     patch_params = f'size_{patch_size}_overlap_{overlap}'
-    graph_file_dir = os.path.join(const.gnn_dir, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'structure_only')
+    graph_file_dir = os.path.join(const.GNN_DIR, feature_type, 'patch_tissue', f"max_distance_{max_dist}", 'pytorch_geo', 'structure_only')
     data_pytorch_geo_dir = os.path.join(graph_file_dir, patch_params, 'data')
     mapping_df_file = os.path.join(data_pytorch_geo_dir, "graphs_df_pytorch_geo.pkl")
     data_file = os.path.join(data_pytorch_geo_dir, "data_pytorch_geo.pkl")

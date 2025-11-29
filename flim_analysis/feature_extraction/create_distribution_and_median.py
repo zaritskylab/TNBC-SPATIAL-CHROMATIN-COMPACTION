@@ -30,11 +30,11 @@ if __name__ == '__main__':
         feature_file_name = "FLIM_features_full_tissue.csv"
         build_lifetime_distribution_full_tissue(sample_type, max_range, bin_range, feature_file_name)
 
-        aggregate_median_features_by_leap(const.full_tissue_dir, 'core')
+        aggregate_median_features_by_leap(const.FULL_TISSUE_DIR, 'core')
 
     # ---------- RESECTION ----------
     if args.sample_type == 'resection':
-        aggregate_median_features_by_leap(const.full_tissue_dir, 'resection')
+        aggregate_median_features_by_leap(const.FULL_TISSUE_DIR, 'resection')
 
     # ---------- PATCH ----------
     if args.sample_type == 'patch':

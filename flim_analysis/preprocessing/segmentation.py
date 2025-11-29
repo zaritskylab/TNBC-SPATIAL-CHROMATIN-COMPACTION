@@ -131,7 +131,7 @@ class StarDistSeg(SegmentationClass):
 
         segment_label = segment_results[0]
 
-        dir_leap_segment = const.seg_dir
+        dir_leap_segment = const.SEG_DIR
         os.makedirs(dir_leap_segment, exist_ok=True)
 
         # Save the segment_label and the segmentation details
@@ -191,18 +191,18 @@ def run_segmentation(sample=False):
     """
 
     tup_list = []
-    _, leaps_list, _ = extract_core_resection_from_tnbc(const.rcb_file, for_prediction=False)
+    _, leaps_list, _ = extract_core_resection_from_tnbc(const.RCB_FILE, for_prediction=False)
     if sample:
         leaps_list=leaps_list[:1]
     print(f"Total LEAP samples: {len(leaps_list)}")
 
     for idx, leap_number in enumerate(leaps_list):
         fluor_file_name = f'LEAP{leap_number}_fluorescent.tif'
-        fluor_img_path = os.path.join(const.fluorescent_dir, fluor_file_name)
+        fluor_img_path = os.path.join(const.FLUORESCENT_DIR, fluor_file_name)
 
         if os.path.isfile(fluor_img_path):
             seg_file_name = f'LEAP{leap_number}_segmentation_labels.tif'
-            seg_file_path = os.path.join(const.seg_dir, seg_file_name)
+            seg_file_path = os.path.join(const.SEG_DIR, seg_file_name)
             print(seg_file_path)
 
             if os.path.exists(seg_file_path):
@@ -275,22 +275,22 @@ def run_segmentation_qc(sample=False):
     - Applies `remove_outliners_labels` to generate a QC version if it does not already exist
     """
 
-    os.makedirs(const.seg_after_qc_dir, exist_ok=True)
-    _, leaps_list, _ = extract_core_resection_from_tnbc(const.rcb_file, for_prediction=False)
+    os.makedirs(const.SEG_AFTER_QC_DIR, exist_ok=True)
+    _, leaps_list, _ = extract_core_resection_from_tnbc(const.RCB_FILE, for_prediction=False)
     if sample:
         leaps_list=leaps_list[:1]
 
     for leap_number in leaps_list:
         leap_name = f"LEAP{leap_number}"
-        for file_name in os.listdir(const.seg_dir):
+        for file_name in os.listdir(const.SEG_DIR):
             if file_name == f'{leap_name}_segmentation_labels.tif':
                 seg_file_name = file_name
-                qc_file_path = os.path.join(const.seg_after_qc_dir, f'{leap_name}_segmentation_labels_qc.tif')
+                qc_file_path = os.path.join(const.SEG_AFTER_QC_DIR, f'{leap_name}_segmentation_labels_qc.tif')
 
                 if os.path.exists(qc_file_path):
                     print(f"QC file already exists: {qc_file_path}")
                 else:
-                    label_file_path = os.path.join(const.seg_dir, seg_file_name)
+                    label_file_path = os.path.join(const.SEG_DIR, seg_file_name)
                     seg_image = io.imread(label_file_path)
                     remove_outliners_labels(seg_image, qc_file_path)
                     print(f"QC completed for: {leap_name}")

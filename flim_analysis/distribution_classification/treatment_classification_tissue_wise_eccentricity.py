@@ -119,11 +119,11 @@ if __name__ == '__main__':
   print(f"Running FLIM tissue-wise classification pipeline using eccentricity features...")
 
   # Load metadata
-  metadata_df = load_metadata(const.rcb_file)
+  metadata_df = load_metadata(const.RCB_FILE)
 
   # Load eccentricity distribution data
   distribution_csv_path = Path(
-      const.full_tissue_dir
+      const.FULL_TISSUE_DIR
   ) / f'core/{args.dist_csv_name}'
   if not distribution_csv_path.exists():
     raise FileNotFoundError(
@@ -160,7 +160,7 @@ if __name__ == '__main__':
   # Create output directory
   cv_strategy = "loocv"
   save_dir = (
-      Path(const.distribution_results_base_dir) / "classification_results_using_eccentricity" /
+      Path(const.DISTRIBUTION_RESULTS_BASE_DIR) / "classification_results_using_eccentricity" /
       "tissue_wise" / distribution_csv_path.stem / cv_strategy
   )
   save_dir.mkdir(parents=True, exist_ok=True)

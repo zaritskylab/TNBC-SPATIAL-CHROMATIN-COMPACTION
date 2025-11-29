@@ -883,7 +883,7 @@ def plot_one_transition(leap_id, prob_coords, lifetime_and_prob_df, radius_list,
     # prob_coords['vertex-index'] = prob_coords['vertex-index']+1
 
     
-    flim_prob_path = os.path.join(const.flim_model_probability_dir, f'Leap{leap_id}_flim_probability.tif')
+    flim_prob_path = os.path.join(const.FLIM_MODEL_PROBABILITY_DIR, f'Leap{leap_id}_flim_probability.tif')
     img = tifffile.imread(flim_prob_path)
     height, width = img.shape[:2]
 
@@ -1041,7 +1041,7 @@ def plot_transition_2_path_homo_region(leap_id, prob_coords, lifetime_and_prob_d
         .reset_index()
     )
 
-    flim_prob_path = os.path.join(const.flim_model_probability_dir, f'Leap{leap_id}_flim_probability.tif')
+    flim_prob_path = os.path.join(const.FLIM_MODEL_PROBABILITY_DIR, f'Leap{leap_id}_flim_probability.tif')
     img = tifffile.imread(flim_prob_path)
     height, width = img.shape[:2]
 
@@ -1170,7 +1170,7 @@ def plot_transition_2_path_homo_hetro_region(leap_id, prob_coords, lifetime_and_
     # prob_coords['vertex-index'] = prob_coords['vertex-index'] + 1
 
     # ---- Load probability image ----
-    flim_prob_path = os.path.join(const.flim_model_probability_dir, f'Leap{leap_id}_flim_probability.tif')
+    flim_prob_path = os.path.join(const.FLIM_MODEL_PROBABILITY_DIR, f'Leap{leap_id}_flim_probability.tif')
     img = tifffile.imread(flim_prob_path)
     height, width = img.shape[:2]
 
