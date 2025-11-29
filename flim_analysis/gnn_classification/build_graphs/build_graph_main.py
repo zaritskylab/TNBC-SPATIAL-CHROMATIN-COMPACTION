@@ -1,10 +1,13 @@
 import sys
 import os
-from flim_analysis.gnn_clssification.build_graphs.build_graph import *
+from flim_analysis.gnn_classification.build_graphs.build_graph import *
 from utils.data_func import *
 import config.const as const
 import config.params as params
 import argparse
+import numpy as np
+import random
+
 primary_seed = 42
 np.random.seed(primary_seed)
 random.seed(primary_seed)
@@ -85,8 +88,8 @@ if __name__ == '__main__':
 
 
     elif args.graph_type == 'shuffling_gnn':
-        seeds_num = args.n_seeds
-        seeds = [random.randint(1, 10000) for _ in range(seeds_num)]
+        seeds_amount = args.n_seeds
+        seeds = [random.randint(1, 10000) for _ in range(seeds_amount)]
         print(f"start shuffle + build graphs for patch size {patch_size}, overlap {overlap}")
         df_file_path = os.path.join(const.patch_dir, f'size_{patch_size}_overlap_{overlap}', f"FLIM_features_patches_size_{patch_size}_overlap_{overlap}_after_filter.csv")
         patch_tissue_features_df = pd.read_csv(df_file_path, dtype = {'leap_ID': str})
