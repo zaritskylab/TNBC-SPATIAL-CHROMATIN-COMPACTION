@@ -6,7 +6,7 @@ RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
 # SEG_AFTER_QC_DIR = os.path.join(DATA_DIR, 'segmentations_after_qc')
 
 
-BASE_DIR =  r'/sise/assafzar-group/assafzar/reut/Test_FLIM/from_FLIM_dir'
+BASE_DIR =  r'/sise/assafzar-group/assafzar/reut/FLIM_FINAL'
 SEG_DIR = os.path.join(BASE_DIR, 'segmentations')
 SEG_AFTER_QC_DIR = os.path.join(BASE_DIR, 'segmentations_after_qc')
 FLUORESCENT_DIR = os.path.join(BASE_DIR, 'fluorescent_channel')
@@ -20,10 +20,10 @@ FLIM_MODEL_PROBABILITY_DIR = os.path.join(BASE_DIR, 'flim_model_probability')
 SINGLE_NUCLEI_LIFETIME_DIR = os.path.join(BASE_DIR, 'single_nuclei_lifetime')
 
 
-DISTRIBUTION_RESULTS_BASE_DIR = r'path/to/your/lifetime/distribution/results'
+DISTRIBUTION_RESULTS_BASE_DIR = os.path.join(BASE_DIR, 'distribution_results')
 
-DISTRIBUTION_RESULTS_FULL_TISSUE_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, '18_bins_new/xgboost', 'tissue_wise')
-DISTRIBUTION_RESULTS_PATCH_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, '18_bins_new/xgboost', 'patch_wise')
+DISTRIBUTION_RESULTS_FULL_TISSUE_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, 'tissue_wise')
+DISTRIBUTION_RESULTS_PATCH_DIR = os.path.join(DISTRIBUTION_RESULTS_BASE_DIR, 'patch_wise')
 
 DATA_PREPARATION_DIR = os.path.join(BASE_DIR, 'figure_results', 'data_preparation')
 os.makedirs(DATA_PREPARATION_DIR, exist_ok=True)
