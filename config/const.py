@@ -1,4 +1,4 @@
-
+import os
 
 DATA_DIR = r'/sise/assafzar-group/assafzar/leor/delta_tissue_maddy/data/tnbc_organised/4_FLIM'
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
