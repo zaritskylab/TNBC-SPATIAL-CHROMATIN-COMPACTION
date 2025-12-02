@@ -34,7 +34,7 @@ model_custom_params = {
     "pooling": "max",              # Options: "mean" or "max"
     "heads": 1,                    # Attention heads for GAT; 1 for GCN
     "weight_decay": 0.0001,        # L2 regularization
-    "epochs": 5,                  # Number of training epochs
+    "epochs": 50,                  # Number of training epochs
     "class_ratio": 1.0             # Positive class weight for imbalance
 }
 
