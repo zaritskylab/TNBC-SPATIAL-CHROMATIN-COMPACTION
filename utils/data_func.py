@@ -53,7 +53,7 @@ def create_X_y(features_df, feature_name, remain_ID=False, patches=False):
 
  
 def extract_core_resection_from_tnbc(path_file, slide_num=False, for_prediction=True):
-    rcb_df = pd.read_excel(path_file, dtype={'leap_ID': str})
+    rcb_df = pd.read_csv(path_file, dtype={'leap_ID': str})
     
     # Extract the numerical part of leap_ID
     rcb_df['leap_ID'] = rcb_df['leap_id'].str.extract(r'(\d+)')

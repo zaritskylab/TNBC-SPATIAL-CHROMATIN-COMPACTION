@@ -4,10 +4,11 @@ import pandas as pd
 import config.params as params
 import config.const as const
 from pathlib import Path
+import re
 from flim_analysis.distribution_classification.binary_classifier_trainer import BinaryClassifierTrainer
 
 # Set primary seed for reproducibility
-PRIMARY_SEED = params.primary_seed
+PRIMARY_SEED = const.PRIMARY_SEED
 
 
 def load_metadata(metadata_path: Path) -> pd.DataFrame:
@@ -159,17 +160,22 @@ if __name__ == '__main__':
 
   # Create output directory
   cv_strategy = "loocv"
+  model_name = "xgboost"
+  feature_type = "lifetime"
+  bin_amount = bin_amount = int(re.search(r"bins_amount_(\d+)", args.dist_csv_name).group(1))
+
   save_dir = (
-      Path(const.DISTRIBUTION_RESULTS_BASE_DIR) / "classification_results" /
-      "tissue_wise" / distribution_csv_path.stem / cv_strategy
+      Path(const.DISTRIBUTION_RESULTS_FULL_TISSUE_DIR) / feature_type /
+      model_name / cv_strategy / f"{bin_amount}_bins"
   )
   save_dir.mkdir(parents=True, exist_ok=True)
+  print(save_dir)
 
   # Run classification
   trainer = BinaryClassifierTrainer(
       X, y, patient_ids=group_ids, sample_ids=leap_ids,
       feature_names=feature_names, num_seeds=args.n_seeds,
-      num_permutations=args.n_permutations, model_type="xgboost",
+      num_permutations=args.n_permutations, model_type=model_name,
       output_dir=save_dir, tune_hyperparameters=True, primary_seed=PRIMARY_SEED,
       cv_strategy=cv_strategy, optuna_cv_strategy='stratified_kfold',
       optuna_cv_n_splits=5

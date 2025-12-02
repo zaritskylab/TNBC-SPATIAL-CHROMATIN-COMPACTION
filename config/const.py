@@ -15,7 +15,7 @@ PATCH_DIR = os.path.join(BASE_DIR, 'patches_tissue')
 FULL_TISSUE_DIR = os.path.join(BASE_DIR, 'full_tissue')
 GNN_DIR = os.path.join(BASE_DIR, 'gnn')
 SPATIAL_DIR = os.path.join(BASE_DIR, 'spatial')
-RCB_FILE = os.path.join(BASE_DIR, 'tnbc_dataset.xlsx')
+RCB_FILE = os.path.join(BASE_DIR, 'tnbc_dataset.csv')
 FLIM_MODEL_PROBABILITY_DIR = os.path.join(BASE_DIR, 'flim_model_probability')
 SINGLE_NUCLEI_LIFETIME_DIR = os.path.join(BASE_DIR, 'single_nuclei_lifetime')
 

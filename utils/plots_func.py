@@ -71,7 +71,6 @@ def extract_distribution_seed_results(root_dir, seed_prefix='seed_', predictions
                 # Check if predictions file exists
                 if os.path.exists(predictions_path):
                     # Read the predictions file
-                    # If it's an Excel file, replace with pd.read_excel
                     df = pd.read_csv(predictions_path)
                     if agg_results:
                         df = df.groupby('sample_id', as_index=False).agg({

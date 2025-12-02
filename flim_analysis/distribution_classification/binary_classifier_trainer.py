@@ -16,6 +16,7 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 import config.params as params
+import config.const as const
 from pathlib import Path
 from tqdm import tqdm
 from typing import Optional, Literal, Callable, Iterator, Tuple
@@ -47,7 +48,7 @@ warnings.filterwarnings("ignore", category=ConvergenceWarning)
 sns.set_context("notebook", font_scale=1.25)
 
 # set primary seed for reproducibility
-PRIMARY_SEED = params.primary_seed
+PRIMARY_SEED = const.PRIMARY_SEED
 
 
 class ModelRegistry:
