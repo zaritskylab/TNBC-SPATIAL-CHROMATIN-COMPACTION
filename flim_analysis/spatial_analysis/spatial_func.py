@@ -267,33 +267,43 @@ def process_gnn_results(
     model_params="model_type_GAT_batch_size_16_lr_0.001"):
     """
     Reads the GNN results for a given seed, merges them with the patch DataFrame,
-    filters based on probability, and then aggregates the results.
+    optionally filters based on probability, and then aggregates the results.
 
     Parameters
     ----------
     patch_df : pd.DataFrame
         DataFrame containing the patch information to merge with GNN results.
-    const : module or object
-        Object or module containing the attribute `gnn_dir` used to build paths.
+    seed_num : int or str
+        Seed number used in the experiment (e.g., 35 for folder "seed_35").
     patch_size : int or float
-        Size of the patch used.
-    overlap : int or float
-        Overlap parameter used.
-    feature_type : str
-        The feature type (e.g., "featureA", "featureB").
-    tissue_resolution : str
-        Tissue resolution (e.g., "low", "high").
-    max_dist : int
-        Maximum distance parameter used in constructing the graph directory.
-    seed_num : str or int
-        Seed number folder name (e.g., "seed_35" -> pass "35").
+        Size of the patch used when generating the GNN inputs.
+    date_time : str or datetime-like
+        Experiment date-time stamp used to locate the corresponding GNN results
+        directory.
+    filter_flag : bool, optional
+        If True, apply probability-based filtering to the GNN predictions before
+        aggregation. Defaults to True.
+    overlap : float, optional
+        Overlap between neighboring patches used when constructing the dataset.
+        Defaults to 0.75.
+    feature_type : str, optional
+        The feature type used to construct the graph (e.g., "lifetime").
+        Defaults to "lifetime".
+    tissue_resolution : str, optional
+        Resolution / level at which tissue information is aggregated
+        (e.g., "patch_tissue"). Defaults to "patch_tissue".
+    max_dist : int, optional
+        Maximum distance parameter used when constructing the graph directory
+        (e.g., for edge cutoff). Defaults to 30.
     model_params : str, optional
-        Model parameters folder name. Defaults to "model_type_GAT_batch_size_16_lr_0.001".
+        Model parameter string identifying the model configuration subfolder,
+        e.g. "model_type_GAT_batch_size_16_lr_0.001". Defaults to that value.
 
     Returns
     -------
     pd.DataFrame
-        Aggregated DataFrame after filtering and grouping by nucleus_label, leap_ID.
+        Aggregated DataFrame after filtering and grouping by nucleus_label,
+        leap_ID.
     """
     gnn_results = extract_gnn_results(seed_num, patch_size, date_time, overlap, feature_type, tissue_resolution, max_dist, model_params)
     # Merge with patch_df

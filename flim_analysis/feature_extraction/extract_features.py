@@ -876,7 +876,7 @@ def build_distribution(features_df, feature_name, bins_amount, sample_type):
     max_val = features_df[feature_name].max()
     bin_range = max_val / bins_amount
 
-    print(f"{feature_name} histogram will use {bins_amount} bins of size {bin_range} ns, up to {max_val} ns.")
+    print(f"{feature_name} histogram will use {bins_amount} bins of size {bin_range}, up to {max_val}.")
     distribution_params = [feature_name, max_val, bin_range]
     print(f"Distribution parameters: {distribution_params}")
 
