@@ -2,7 +2,7 @@
 
 This repository contains tools and code for analyzing Fluorescence Lifetime Imaging Microscopy (FLIM) data in the context of triple-negative breast cancer (TNBC). It provides pipelines for segmentation, feature extraction, and analysis of FLIM images from tissue samples.
 
----
+
 
 ## Installation and Setup
 
@@ -11,55 +11,18 @@ This repository contains tools and code for analyzing Fluorescence Lifetime Imag
 You must clone the repository and `cd` into it before installing. The `pyproject.toml` file lives at the root of the repo and is required for correct installation.
 
 ```bash
-git clone https://github.com/zaritskylab/flim-tnbc
-cd flim-tnbc
+git clone https://github.com/zaritskylab/TNBC-SPATIAL-CHROMATIN-COMPACTION
+cd TNBC-SPATIAL-CHROMATIN-COMPACTION
 ```
 
-### 2. Choose Your Installation Strategy
+### 2. Enviroment installation 
 
->  he installation is split into base and optional components to allow for flexibility and to avoid dependency conflicts - especially when working with GPU-based libraries like stardist and torch.
-
-There are two options, depending on whether you're using GPU or CPU:
-
-* Option 1: If you plan to run segmentation on GPU, you must use separate environments for stardist and torch, as their GPU versions may conflict due to incompatible CUDA requirements.
-
-* Option 2: If you are running segmentation on CPU only, you can safely install everything in a single environment using [all]
-
-#### Option 1: 
- > Use the appropriate environment depending on your task:
-
-* Activate **flim_stardist** when running segmentation.
-
-* Activate **flim_torch** when running graph-based analysis.
-
-When using Option 1, any tasks other than segmentation or graph-based (GNN) analysis can be run in either environment.
-
-##### Environment A: For Segmentation with StarDist
 ```bash
-conda create -n flim_stardist python=3.10.13 -y
-conda activate flim_stardist
-
-pip install -e .[stardist]
+conda env create -f environment.yml
+conda activate tnbc_flim
+pip install -e 
 ```
 
-##### Environment B: For Graph-Based Analysis with Torch 
-```bash
-conda create -n flim_torch python=3.10.13 -y
-conda activate flim_torch
-
-pip install -e .[torch]
-```
-
-#### Option 2: 
-##### Install everything in one environment (only for CPU)
-```bash
-conda create -n flim_all python=3.10.13 -y
-conda activate flim_all
-
-pip install -e .[all]
-```
-
----
 
 ## Configuration Check
 
@@ -67,60 +30,74 @@ Before running any analysis, make sure the base directory for your analysis is c
 
 ```python
 # config/const.py
-base_dir = "/your/full/path/to/analysis"
+BASE_DIR = "/your/full/path/to/analysis"
 ```
----
 
-## Project Structure
+## Repository overview
 
 ```bash
-TNBC_FLIM/
+TNBC-SPATIAL-CHROMATIN-COMPACTION/
 ├── config/
+│   ├── const.py
+│   └── params.py
+│
 ├── flim_analysis/
+│   ├── distribution_classification/
+│   ├── feature_extraction/
+│   ├── gnn_classification/
+│   ├── preprocessing/
+│   ├── resection analysis/
+│   └── spatial_analysis/
+│
 ├── notebooks/
+│   ├── analysis_paper_result_reproduce/
+│   └── usage_example/
+│
 ├── sbatch/
 ├── utils/
 ├── pyproject.toml
-└── README.md
+└── enviroment.yml
 ```
 
 ### Main Components
 
-#### `config/`
+### `config/`
 Use this folder to manage fixed paths and experiment-level configuration settings.
 
 Contains configuration files:
 - `const.py`: path global constants
 - `params.py`: experiment parameters
 
----
 
-#### `flim_analysis/`
+### `flim_analysis/`
 Main source code organized by functional domain:
 
-##### `feature_extraction/`
-Scripts for extracting FLIM and morphological features at both the patch and full-tissue level.
-
-##### `preprocessing/`
+#### `preprocessing/`
 Tissue segmentation and preprocessing workflows to prepare input for feature extraction.
 
-##### `spatial_analysis/`
-Contains spatial metrics and related analysis.  
-**Data preparation for some notebooks is done in**  
-`spatial_analysis/spatial_information.ipynb`
+#### `feature_extraction/`
+Scripts for extracting FLIM and morphological features at both the patch and full-tissue level.
 
-##### `gnn_clssification/`
+#### `distribution_classification/`
+Distribution-based classification using cross-validation and robust model evaluation techniques.
+
+#### `gnn_clssification/`
 End-to-end GNN pipeline, subdivided into:
 - `build_graphs/`: construct graphs from extracted features
 - `create_pytorch_geo_data/`: process graphs into PyTorch Geometric format
 - `train_model/`: training and evaluation of GNNs
 
-##### `resection analysis/`
+#### `spatial_analysis/`
+Contains spatial metrics and related analysis.  
+**Data preparation for some notebooks is done in**  
+`spatial_analysis/spatial_information.ipynb`
+
+#### `resection analysis/`
 Contains Jupyter notebooks related to resection-based spatial analysis.
 
 ---
 
-#### `notebooks/`
+### `notebooks/`
 Top-level directory for exploratory and paper-figure notebooks.
 
 #### `analysis_paper_result_reproduce/`
@@ -133,19 +110,24 @@ Organized by figure number — contains both **main** and **supplementary** figu
 Contains runnable examples demonstrating how to use the main components of the pipeline.
 
 ---
+
+
 ## Data
 
 This analysis is based on a retrospective cohort obtained from triple-negative breast cancer (TNBC) patients prior to neoadjuvant chemotherapy (NACT).
 
 ### Download
 
-Download the dataset from [link] and extract it to your local machine.
-After extraction, set data_dir in config/const.py to the folder you downloaded.
+Download the dataset from [https://doi.org/10.6019/S-BIAD2418] and extract it to your local machine.
 
-```python
-# config/const.py
-data_dir = "/your/full/path/to/data"
-```
+> **Note**  
+> After extraction, make sure all required input data is located in the directory specified by `const.DATA_DIR` (defined in config/const.py).
+>
+> ```python
+> DATA_DIR = os.path.join(BASE_DIR, "data")
+> ```
+>
+> The scripts assume that all input data is stored inside this directory.
 
 ### Folder layout
 ```bash
@@ -153,41 +135,80 @@ data/
 ├── raw/
 ├── segmentations/
 ├── segmentations_after_qc/
-└── metadata.csv
+└── cohort_metadata.csv
 ```
 
 - raw/ – original FLIM inputs (intensity and lifetime images).
 - segmentations/ – per-image nucleus segmentation outputs.
 - segmentations_after_qc/ – segmentation masks after quality control (bad regions removed/fixed).
-- metadata.csv – per-sample metadata used across notebooks and pipelines.
+- cohort_metadata.csv – per-sample metadata. 
 
-### metadata.csv (columns)
 
-**TBD**
+## Direct script run
+### Preprocessing and segmentation
+```bash
+python flim_analysis/preprocessing/processing.py
 
-### Cohort Overview
-#### Core Samples
-- **Pre-treatment biopsies**, collected before the initiation of NACT.
-- Each sample represents a **small region of the tumor**, typically taken with a core needle.
-- Used to assess **chromatin compaction** features prior to therapy.
-- Cohort includes:
-  - **30 cores from responders**
-  - **23 cores from non-responders**
+# NOTE: Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
+python flim_analysis/preprocessing/segmentation.py
+```
+### Core analysis
+#### Full tissue analysis
+```bash
+# Step 1: Feature extraction
+python flim_analysis/feature_extraction/extract_features.py core
+```
 
-#### Resection Samples
-- **Post-treatment surgical specimens**, acquired only for non-responder patients.
-- These samples were taken at the time of **surgery** following failed NACT.
-- Resections are **substantially larger** than core biopsies and provide more extensive spatial context.
-- Available for **17 of the 23 non-responder** patients.
+```bash
+# Step 2: Create lifetime distribution with 18 bins and median features data 
+python flim_analysis/feature_extraction/create_distribution_and_median.py core --max-val 13 --bin-range 0.73 
+```
 
-#### Clinical Classification
-Patients were classified into **responder** and **non-responder** groups based on their **Residual Cancer Burden (RCB) score**, a metric reflecting the amount of tumor remaining after treatment.
+```bash
+# Step 3: Lifetime distribution treatment classification tissue wise
+python -u -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 1 --n_permutations 1
+```
 
----
+#### Patch analysis
+```bash
+# Step 1: Feature extraction (NOTE: Run this only AFTER core feature extraction is complete).
+python flim_analysis/feature_extraction/extract_features.py patch --patch-size 1500 --overlap 0.75
+```
 
-#### Note:
-The notebooks performs **segmentation and feature extraction** on the FLIM images corresponding to:
-- **Core biopsies** (pre-treatment)
-- **Resection specimens** (post-treatment for non-responders)
+```bash
+# Step 2: Create lifetime distribution with 18 bins
+python flim_analysis/feature_extraction/create_distribution_and_median.py patch --patch-size 1500 --overlap 0.75 --max-val 13 --bin-range 0.73      
+```
 
-Resection samples are substantially larger than core biopsies, and therefore require significantly more time and memory for segmentation and feature extraction.
+```bash
+# Step 3: Lifetime distribution treatment classification patch wise 
+python -u -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
+```
+
+#### GNN Classification
+```bash
+# Step 1: Build graphs for GNN training (NOTE: Run this only AFTER patch feature extraction is complete)
+python -u flim_analysis/gnn_classification/build_graphs/build_graph_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
+```
+
+```bash
+# Step 2: Create PyTorch Geometric data objects for GNN training
+python -u flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pytorch_geo_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
+```
+
+```bash
+# Step 3: GNN training
+python -u flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 1
+```
+
+### Resection analysis
+```bash
+# Feature extraction
+python flim_analysis/feature_extraction/extract_features.py resection
+```
+ 
+```bash
+# Create median features data frame
+python flim_analysis/feature_extraction/create_distribution_and_median.py resection
+```
+  

@@ -1,21 +1,20 @@
 import os
 
-DATA_DIR = r'/sise/assafzar-group/assafzar/leor/delta_tissue_maddy/data/tnbc_organised/4_FLIM'
+BASE_DIR = "/your/full/path/to/analysis"
+
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
-# SEG_DIR = os.path.join(DATA_DIR, 'segmentations')
-# SEG_AFTER_QC_DIR = os.path.join(DATA_DIR, 'segmentations_after_qc')
+SEG_DIR = os.path.join(DATA_DIR, 'segmentations')
+SEG_AFTER_QC_DIR = os.path.join(DATA_DIR, 'segmentations_after_qc')
+FLUORESCENT_DIR = os.path.join(DATA_DIR, 'fluorescent_channel')
+FLIM_DIR = os.path.join(DATA_DIR, 'flim_channel')
+RCB_FILE = os.path.join(DATA_DIR, 'cohort_metadata.csv')
 
 
-BASE_DIR =  r'/sise/assafzar-group/assafzar/reut/FLIM_FINAL'
-SEG_DIR = os.path.join(BASE_DIR, 'segmentations')
-SEG_AFTER_QC_DIR = os.path.join(BASE_DIR, 'segmentations_after_qc')
-FLUORESCENT_DIR = os.path.join(BASE_DIR, 'fluorescent_channel')
-FLIM_DIR = os.path.join(BASE_DIR, 'flim_channel')
 PATCH_DIR = os.path.join(BASE_DIR, 'patches_tissue')
 FULL_TISSUE_DIR = os.path.join(BASE_DIR, 'full_tissue')
 GNN_DIR = os.path.join(BASE_DIR, 'gnn')
 SPATIAL_DIR = os.path.join(BASE_DIR, 'spatial')
-RCB_FILE = os.path.join(BASE_DIR, 'tnbc_dataset.csv')
 FLIM_MODEL_PROBABILITY_DIR = os.path.join(BASE_DIR, 'flim_model_probability')
 SINGLE_NUCLEI_LIFETIME_DIR = os.path.join(BASE_DIR, 'single_nuclei_lifetime')
 
