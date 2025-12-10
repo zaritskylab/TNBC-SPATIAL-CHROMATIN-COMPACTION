@@ -81,7 +81,7 @@ Scripts for extracting FLIM and morphological features at both the patch and ful
 #### `distribution_classification/`
 Distribution-based classification using cross-validation and robust model evaluation techniques.
 
-#### `gnn_clssification/`
+#### `gnn_classification/`
 End-to-end GNN pipeline, subdivided into:
 - `build_graphs/`: construct graphs from extracted features
 - `create_pytorch_geo_data/`: process graphs into PyTorch Geometric format
