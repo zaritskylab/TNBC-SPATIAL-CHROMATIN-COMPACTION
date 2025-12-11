@@ -24,22 +24,22 @@ This repo is based on a retrospective cohort obtained from triple-negative breas
 FLIM/
 ├── metadata/ # Image acquisition metadata
 │   ├── LEAP015_slide7_extreme-non-responder_0countthreshold_properties.xml
-│   └── ... Other .xml files for each leap id
+│   └── ... Other .xml files for each LEAP ID
 ├── raw/ # Raw FLIM images
 │   ├── LEAP015_slide7_extreme-non-responder_0countthreshold.tif
-│   └── ... Other .tif files for each leap id
+│   └── ... Other .tif files for each LEAP ID
 ├── segmentations/ # Single nuclei segmentation maps (can also be created by the repo using the raw data)
 │   ├── LEAP015_segmentation_labels.tif
-│   └── ... Other .tif files for each leap id
+│   └── ... Other .tif files for each LEAP ID
 ├── segmentations_after_qc/ # Single nuclei segmentation maps after quality control (can also be created by the repo using the raw data and segmentation maps)
 │   ├── LEAP015_segmentation_labels_qc.tif
-│   └── ... Other .tif files for each leap id
-└── cohort_metadata.csv # Clinical metdata
+│   └── ... Other .tif files for each LEAP ID
+└── cohort_metadata.csv # Clinical metadata
 ```
 
 ### Download
 
-Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data exist on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run thier code.
+Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data resides on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
 
 ```python
 DATA_DIR = "PATH-TO-THE-DATA"
@@ -56,14 +56,14 @@ git clone https://github.com/zaritskylab/TNBC-SPATIAL-CHROMATIN-COMPACTION
 cd TNBC-SPATIAL-CHROMATIN-COMPACTION
 ```
 
-### 2. Enviroment installation
+### 2. Environment installation
 
-Make sure the [pyproject.toml](pyproject.toml) file lives at the root of the repo as it is required for correct installation of the python enviromet and packages. Run the following commands:
+Make sure the [pyproject.toml](pyproject.toml) file lives at the root of the repo as it is required for correct installation of the Python environment and packages. Run the following commands:
 
 ```bash
 conda env create -f environment.yml
 conda activate tnbc_flim
-pip install -e 
+pip install -e .
 ```
 
 
@@ -89,7 +89,7 @@ TNBC-SPATIAL-CHROMATIN-COMPACTION/
 │   ├── feature_extraction/
 │   ├── gnn_classification/
 │   ├── preprocessing/
-│   ├── resection analysis/
+│   ├── resection_analysis/
 │   └── spatial_analysis/
 │
 ├── notebooks/
@@ -99,7 +99,7 @@ TNBC-SPATIAL-CHROMATIN-COMPACTION/
 ├── sbatch/
 ├── utils/
 ├── pyproject.toml
-└── enviroment.yml
+└── environment.yml
 ```
 
 ### `config/`
@@ -129,9 +129,9 @@ End-to-end GNN pipeline, subdivided into:
 - `train_model/`: training and evaluation of GNNs
 
 #### `spatial_analysis/`
-Contains spatial metrics and related analysis. Also some data preperation is don in the notebook `spatial_analysis/spatial_information.ipynb`
+Contains spatial metrics and related analysis. Some data preparation is also done in the notebook `spatial_analysis/spatial_information.ipynb`
 
-#### `resection analysis/`
+#### `resection_analysis/`
 Contains Jupyter notebooks related to resection-based spatial analysis.
 
 ### `notebooks/`
@@ -156,7 +156,7 @@ python flim_analysis/preprocessing/processing.py
 ```
 ### Segmentation
 ```bash
-# NOTE: This step is not a must as data folder already contains segmentations. Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
+# NOTE: This step is not required as data folder already contains segmentations. Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
 python flim_analysis/preprocessing/segmentation.py
 ```
 ### Full tissue analysis
@@ -171,7 +171,7 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py core -
 ```
 
 ```bash
-# Tissue wise lifetime distribution treatment classification 
+# Tissue-wise lifetime distribution treatment classification 
 python -u -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
 ```
 
@@ -182,12 +182,12 @@ python flim_analysis/feature_extraction/extract_features.py patch --patch-size 1
 ```
 
 ```bash
-# Patch lifetime distribution creationn with default 18 bins
+# Patch lifetime distribution creation with default 18 bins
 python flim_analysis/feature_extraction/create_distribution_and_median.py patch --patch-size 1500 --overlap 0.75 --max-val 13 --bin-range 0.73      
 ```
 
 ```bash
-# Patch wise lifetime distribution treatment classification 
+# Patch-wise lifetime distribution treatment classification 
 python -u -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
 ```
 
