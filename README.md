@@ -1,8 +1,18 @@
-# TNBC-SPATIAL-CHROMATIN-COMPACTION
+# Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository contains tools and code for analyzing Fluorescence Lifetime Imaging Microscopy (FLIM) data in the context of triple-negative breast cancer (TNBC). It provides pipelines for segmentation, feature extraction, and analysis of FLIM images from tissue samples.
+Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
 
+1. Institute for Interdisciplinary Computational Science, Faculty of Computer and Information Science, Ben-Gurion University of the Negev, Beer-Sheva 84105, Israel
+2. Randall Centre for Cell and Molecular Biophysics, King’s College London, Guy’s Campus London, SE1 1UL, UK
 
+- __\*__ Equal contribution
+- __\&__ Co-corresponding authorship
+
+Organisation and dynamics of chromatin play a key role in regulation of cell state and function. In cancer, chromatin plasticity is known to be important in control of drug resistance, but the relationship between chromatin compaction and chemotherapy response within complex tissue settings remains unclear. Here, we measured single nuclei chromatin compaction using fluorescence lifetime imaging microscopy (FLIM) in situ in whole biopsies from 53 pre treatment and 14 post surgery tissue samples of human triple-negative breast cancer (TNBC) patients to determine whether single nuclei spatial chromatin compaction state can predict resistance to neoadjuvant chemotherapy (NACT). Bulk chromatin compaction across 53 pre-treatment core biopsies did not predict patient outcome. However, machine learning analysis revealed that a subset of patients exhibited distinct distributions of single nuclei with more open chromatin states, which was predictive of NACT-resistance.
+
+Graph neural network analysis established that the spatial arrangement of chromatin compaction contributed to prediction of NACT resistance and that chromatin compaction signatures were preserved in tissue state transitions from pre- to 14 post-NACT samples. Our findings shed new light on spatial control of chromatin structure and relationship to therapeutic resistance and establish a foundation for further molecular analysis of chromatin states in complex biological tissues.
+
+To read the full research paper go to the following link **[Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer](https://doi.org/10.64898/2025.12.04.692131)**
 
 ## Installation and Setup
 
