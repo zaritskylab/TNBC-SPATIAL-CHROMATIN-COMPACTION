@@ -218,6 +218,10 @@ python flim_analysis/feature_extraction/extract_features.py resection
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
 
+## License
+
+This repository is released under the Creative Commons Attribution–NonCommercial 4.0 International License. Commercial use is not permitted, and any reuse or modification requires proper attribution to the original authors.
+
 ## Citation
 
 If you use this code, please cite:
