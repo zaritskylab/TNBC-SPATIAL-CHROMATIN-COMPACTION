@@ -26,14 +26,14 @@ echo -e "SLURM_JOB_NODELIST:\t" $SLURM_JOB_NODELIST "\n\n"
 
 ### Array of Python commands
 commands=(
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1000_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1000 --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_2000_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 2000 --n_seeds 1 --n_permutations 1"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1000_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1000 --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_2000_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 2000 --n_seeds 100 --n_permutations 1000"
 )
 
 ### Start your code below ####
 module load anaconda				### load anaconda module (must be present when working with conda environments)
-source activate flim_all			### activate a conda environment, replace my_env with your conda environment
+source activate tnbc_flim   ### activate a conda environment, replace my_env with your conda environment
 cd $SLURM_SUBMIT_DIR
 
 ### Run the command corresponding to the array index

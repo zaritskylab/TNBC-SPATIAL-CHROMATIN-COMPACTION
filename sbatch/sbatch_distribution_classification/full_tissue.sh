@@ -26,16 +26,16 @@ echo -e "SLURM_JOB_NODELIST:\t" $SLURM_JOB_NODELIST "\n\n"
 
 ### Array of Python commands
 commands=(
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_10_bin_range_1.3.csv  --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_23_bin_range_0.585.csv --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_34_bin_range_0.383.csv --n_seeds 1 --n_permutations 1"
-  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_42_bin_range_0.31.csv --n_seeds 1 --n_permutations 1"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_10_bin_range_1.3.csv  --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_23_bin_range_0.585.csv --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_34_bin_range_0.383.csv --n_seeds 100 --n_permutations 1000"
+  "python -u -m flim_analysis.distribution_classification.treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_42_bin_range_0.31.csv --n_seeds 100 --n_permutations 1000"
 )
 
 ### Start your code below ####
 module load anaconda				### load anaconda module (must be present when working with conda environments)
-source activate spatial-metallomics			### activate a conda environment, replace my_env with your conda environment
+source activate tnbc_flim   ### activate a conda environment, replace my_env with your conda environment
 cd $SLURM_SUBMIT_DIR
 
 ### Run the command corresponding to the array index

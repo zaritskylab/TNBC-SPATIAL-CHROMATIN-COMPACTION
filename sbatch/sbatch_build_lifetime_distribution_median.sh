@@ -16,7 +16,7 @@ echo "SLURM_JOB_NODELIST"=$SLURM_JOB_NODELIST
 
 ### Start you code below ####
 module load anaconda              ### load anaconda module
-source activate tnbc_flim_test    ### activate a conda environment, replace my_env with your conda environment
+source activate tnbc_flim         ### activate a conda environment, replace my_env with your conda environment
 
 cd "$SLURM_SUBMIT_DIR"
 cd "TNBC-SPATIAL-CHROMATIN-COMPACTION"
