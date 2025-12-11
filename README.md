@@ -39,7 +39,7 @@ FLIM/
 
 ### Download
 
-Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data resides on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
+Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
 
 ```python
 DATA_DIR = "PATH-TO-THE-DATA"
@@ -151,7 +151,7 @@ Contains runnable examples demonstrating how to use the main components of the p
 
 ### Preprocessing
 ```bash
-# Processing of the raw images (not contained in the data directory and should be ran)
+# Processing of the raw images (not contained in the data directory and should be run)
 python flim_analysis/preprocessing/processing.py
 ```
 ### Segmentation
