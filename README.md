@@ -172,12 +172,12 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py core -
 
 ```bash
 # Tissue-wise lifetime distribution treatment classification 
-python -u -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
+python -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
 ```
 
 ### Patch analysis
 ```bash
-# Patch extraction
+# Patch feature extraction
 python flim_analysis/feature_extraction/extract_features.py patch --patch-size 1500 --overlap 0.75
 ```
 
@@ -188,23 +188,23 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py patch 
 
 ```bash
 # Patch-wise lifetime distribution treatment classification 
-python -u -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
+python -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
 ```
 
 ### GNN Classification
 ```bash
 # Graphs building for GNN training
-python -u flim_analysis/gnn_classification/build_graphs/build_graph_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
+python flim_analysis/gnn_classification/build_graphs/build_graph_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
 ```
 
 ```bash
 # Conversion of graphs to PyTorch Geometric data objects for GNN training
-python -u flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pytorch_geo_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
+python flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pytorch_geo_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
 ```
 
 ```bash
 # GNN training
-python -u flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 1
+python flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 1
 ```
 
 ### Resection analysis
