@@ -188,7 +188,7 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py patch 
 
 ```bash
 # Patch-wise lifetime distribution treatment classification 
-python -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
+python -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 100 --n_permutations 1000
 ```
 
 ### GNN Classification
@@ -204,7 +204,7 @@ python flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pyt
 
 ```bash
 # GNN training
-python flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 1
+python flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 20
 ```
 
 ### Resection analysis
@@ -217,6 +217,21 @@ python flim_analysis/feature_extraction/extract_features.py resection
 # Create median features data frame
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
+
+## Notebook examples
+
+The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
+
+- `run_example_preprocess_segmentation.ipynb`  
+  Demonstrates data preprocessing, segmentation and segmentation quality control.
+
+- `run_example_feature_extraction.ipynb`  
+  Shows how to run feature extraction on preprocessed and segmented data.
+
+- `run_example_gnn_build_train.ipynb`  
+  Builds graphs and trains the GNN model using extracted features.
+
+Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
 
 ## License
 
