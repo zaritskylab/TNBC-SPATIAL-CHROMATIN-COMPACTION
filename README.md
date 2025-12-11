@@ -14,18 +14,51 @@ Graph neural network analysis established that the spatial arrangement of chroma
 
 To read the full research paper go to the following link **[Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer](https://doi.org/10.64898/2025.12.04.692131)**
 
-## Installation and Setup
+## Dataset Setup
+
+This repo is based on a retrospective cohort obtained from triple-negative breast cancer (TNBC) patients prior to neoadjuvant chemotherapy (NACT). **You must download it and set the paths in the code before running anything**.
+
+### Data overview
+
+```
+FLIM/
+├── metadata/ # Image acquisition metadata
+│   ├── LEAP015_slide7_extreme-non-responder_0countthreshold_properties.xml
+│   └── ... Other .xml files for each leap id
+├── raw/ # Raw FLIM images
+│   ├── LEAP015_slide7_extreme-non-responder_0countthreshold.tif
+│   └── ... Other .tif files for each leap id
+├── segmentations/ # Single nuclei segmentation maps (can also be created by the repo using the raw data)
+│   ├── LEAP015_segmentation_labels.tif
+│   └── ... Other .tif files for each leap id
+├── segmentations_after_qc/ # Single nuclei segmentation maps after quality control (can also be created by the repo using the raw data and segmentation maps)
+│   ├── LEAP015_segmentation_labels_qc.tif
+│   └── ... Other .tif files for each leap id
+└── cohort_metadata.csv # Clinical metdata
+```
+
+### Download
+
+Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data exist on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run thier code.
+
+```python
+DATA_DIR = "PATH-TO-THE-DATA"
+```
+
+## Repo Installation and Setup
 
 ### 1. Clone the Repository
 
-You must clone the repository and `cd` into it before installing. The `pyproject.toml` file lives at the root of the repo and is required for correct installation.
+You must clone the repository and change directory into the cloned repository. Run the following commands:
 
 ```bash
 git clone https://github.com/zaritskylab/TNBC-SPATIAL-CHROMATIN-COMPACTION
 cd TNBC-SPATIAL-CHROMATIN-COMPACTION
 ```
 
-### 2. Enviroment installation 
+### 2. Enviroment installation
+
+Make sure the [pyproject.toml](pyproject.toml) file lives at the root of the repo as it is required for correct installation of the python enviromet and packages. Run the following commands:
 
 ```bash
 conda env create -f environment.yml
@@ -36,7 +69,7 @@ pip install -e
 
 ## Configuration Check
 
-Before running any analysis, make sure the base directory for your analysis is correctly set.
+Before running any part of this code, make sure you set the base directory for the analysis specified in [config/const.py](config/const.py) by the `BASE_DIR` variable. This is where all the computational outputs will be saved. 
 
 ```python
 # config/const.py
@@ -69,8 +102,6 @@ TNBC-SPATIAL-CHROMATIN-COMPACTION/
 └── enviroment.yml
 ```
 
-### Main Components
-
 ### `config/`
 Use this folder to manage fixed paths and experiment-level configuration settings.
 
@@ -98,17 +129,13 @@ End-to-end GNN pipeline, subdivided into:
 - `train_model/`: training and evaluation of GNNs
 
 #### `spatial_analysis/`
-Contains spatial metrics and related analysis.  
-**Data preparation for some notebooks is done in**  
-`spatial_analysis/spatial_information.ipynb`
+Contains spatial metrics and related analysis. Also some data preperation is don in the notebook `spatial_analysis/spatial_information.ipynb`
 
 #### `resection analysis/`
 Contains Jupyter notebooks related to resection-based spatial analysis.
 
----
-
 ### `notebooks/`
-Top-level directory for exploratory and paper-figure notebooks.
+Top-level directory for exploratory and paper-figure creation notebooks.
 
 #### `analysis_paper_result_reproduce/`
 Organized by figure number — contains both **main** and **supplementary** figure notebooks:
@@ -119,101 +146,70 @@ Organized by figure number — contains both **main** and **supplementary** figu
 #### `usage_example/`
 Contains runnable examples demonstrating how to use the main components of the pipeline.
 
----
-
-
-## Data
-
-This analysis is based on a retrospective cohort obtained from triple-negative breast cancer (TNBC) patients prior to neoadjuvant chemotherapy (NACT).
-
-### Download
-
-Download the dataset from [https://doi.org/10.6019/S-BIAD2418] and extract it to your local machine.
-
-> **Note**  
-> After extraction, make sure all required input data is located in the directory specified by `const.DATA_DIR` (defined in config/const.py).
->
-> ```python
-> DATA_DIR = os.path.join(BASE_DIR, "data")
-> ```
->
-> The scripts assume that all input data is stored inside this directory.
-
-### Folder layout
-```bash
-data/
-├── raw/
-├── segmentations/
-├── segmentations_after_qc/
-└── cohort_metadata.csv
-```
-
-- raw/ – original FLIM inputs (intensity and lifetime images).
-- segmentations/ – per-image nucleus segmentation outputs.
-- segmentations_after_qc/ – segmentation masks after quality control (bad regions removed/fixed).
-- cohort_metadata.csv – per-sample metadata. 
-
-
 ## Direct script run
-### Preprocessing and segmentation
-```bash
-python flim_analysis/preprocessing/processing.py
+**You should run the scripts by the order given here as some depend on others (unless stated that it is not required).**
 
-# NOTE: Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
+### Preprocessing
+```bash
+# Processing of the raw images (not contained in the data directory and should be ran)
+python flim_analysis/preprocessing/processing.py
+```
+### Segmentation
+```bash
+# NOTE: This step is not a must as data folder already contains segmentations. Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
 python flim_analysis/preprocessing/segmentation.py
 ```
-### Core analysis
-#### Full tissue analysis
+### Full tissue analysis
 ```bash
-# Step 1: Feature extraction
+# Full tissue feature extraction
 python flim_analysis/feature_extraction/extract_features.py core
 ```
 
 ```bash
-# Step 2: Create lifetime distribution with 18 bins and median features data 
+# Lifetime distribution creation with default 18 bins and median features lifetime extraction
 python flim_analysis/feature_extraction/create_distribution_and_median.py core --max-val 13 --bin-range 0.73 
 ```
 
 ```bash
-# Step 3: Lifetime distribution treatment classification tissue wise
-python -u -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 1 --n_permutations 1
+# Tissue wise lifetime distribution treatment classification 
+python -u -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
 ```
 
-#### Patch analysis
+### Patch analysis
 ```bash
-# Step 1: Feature extraction (NOTE: Run this only AFTER core feature extraction is complete).
+# Patch extraction
 python flim_analysis/feature_extraction/extract_features.py patch --patch-size 1500 --overlap 0.75
 ```
 
 ```bash
-# Step 2: Create lifetime distribution with 18 bins
+# Patch lifetime distribution creationn with default 18 bins
 python flim_analysis/feature_extraction/create_distribution_and_median.py patch --patch-size 1500 --overlap 0.75 --max-val 13 --bin-range 0.73      
 ```
 
 ```bash
-# Step 3: Lifetime distribution treatment classification patch wise 
+# Patch wise lifetime distribution treatment classification 
 python -u -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 1 --n_permutations 1
 ```
 
-#### GNN Classification
+### GNN Classification
 ```bash
-# Step 1: Build graphs for GNN training (NOTE: Run this only AFTER patch feature extraction is complete)
+# Graphs building for GNN training
 python -u flim_analysis/gnn_classification/build_graphs/build_graph_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
 ```
 
 ```bash
-# Step 2: Create PyTorch Geometric data objects for GNN training
+# Conversion of graphs to PyTorch Geometric data objects for GNN training
 python -u flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pytorch_geo_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
 ```
 
 ```bash
-# Step 3: GNN training
+# GNN training
 python -u flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 1
 ```
 
 ### Resection analysis
 ```bash
-# Feature extraction
+# Resection feature extraction
 python flim_analysis/feature_extraction/extract_features.py resection
 ```
  
@@ -221,4 +217,13 @@ python flim_analysis/feature_extraction/extract_features.py resection
 # Create median features data frame
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
-  
+
+## Citation
+
+If you use this code, please cite:
+
+> Mealem, R. et al. Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer. 2025.12.04.692131 Preprint at https://doi.org/10.64898/2025.12.04.692131 (2025). 
+
+
+## Contact
+Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for bugs or questions regarding this repo.
