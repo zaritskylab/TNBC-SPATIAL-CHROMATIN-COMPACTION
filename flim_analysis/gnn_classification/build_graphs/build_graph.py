@@ -362,6 +362,20 @@ def create_all_subgraphs(graphs, nodes_samples, k, subgraphs_num, save_dir=False
     return all_subgraphs
 
 def check_existence_nodes_attributes(graph, graph_id):
+    """
+    Check that all nodes in a graph have the required attributes.
+
+    For each node in the given graph, this function verifies that the
+    node has both a "pos" attribute and a "lifetime_mean" attribute.
+
+    Parameters
+    ----------
+    graph : networkx.Graph
+        The graph whose node attributes should be checked.
+    graph_id : hashable
+        Identifier of the graph (e.g., an integer, string, or filename)
+        used only for reporting in the printed messages.
+    """
     for n in graph.nodes():
         if 'pos' not in graph.nodes[n]:
             print(f"Node {n} in graph {graph_id} is missing the 'pos' attribute.")

@@ -478,19 +478,29 @@ def get_train_val_test_indices(mapping_subgraph_df, k_out=5, seed_val=42):
 
 def aggregate_results_by_leap_id(subsamples_results):
     """
-    Aggregates results by leap_ID by calculating the mean probability of subgraphs, 
-    excluding probabilities between 0.4 and 0.6. Defaults to 0.5 if no valid 
-    probabilities remain for a leap_ID.
+    Aggregate subgraph prediction results at the leap_ID level.
 
-    Parameters:
-    - test_pred_results (pd.DataFrame): DataFrame containing subgraph-level predictions 
-      with columns 'leap_ID', 'y_true', and 'y_pred_probs'.
+    Parameters
+    ----------
+    subsamples_results : pandas.DataFrame
+        DataFrame with at least the following columns:
+        - "leap_ID": identifier for the parent graph / sample.
+        - "fold": cross-validation fold index.
+        - "y_true": true binary label for the leap_ID.
+        - "y_pred_probs": predicted probability for the positive class
+          for each subgraph / subsample.
 
-    Returns:
-    - aggregated_results_df (pd.DataFrame): DataFrame with aggregated results, containing:
-        - 'leap_ID': Unique leap_ID.
-        - 'y_true': True label for the leap_ID.
-        - 'aggregated_prob': Aggregated probability for the leap_ID.
+    Returns
+    -------
+    pandas.DataFrame
+        Aggregated results with one row per leap_ID and columns:
+        - "leap_ID"
+        - "fold"
+        - "y_true"
+        - "y_pred_probs_agg": mean over all subgraphs.
+        - "y_pred_probs_agg_filter": mean after filtering out
+          probabilities in [0.4, 0.6] (or the unfiltered mean if
+          nothing remains after filtering).
     """
     # Group results by leap_ID
     leap_id_groups = subsamples_results.groupby("leap_ID")
@@ -543,59 +553,75 @@ def gnn_train_test_k_fold(data_dict, mapping_subgraph_df, device, seed_dir, seed
     Parameters
     ----------
     data_dict : dict
-        Dictionary of PyTorch Geometric `Data` objects (indexed by subgraph).
-    mapping_subgraph_df : pd.DataFrame
+        Dictionary mapping subgraph index → PyTorch Geometric `Data` object.
+        These objects contain graph features used for GNN training.
+    
+    mapping_subgraph_df : pd.DataFrame 
         DataFrame containing graph metadata (e.g., graph_ID, leap_ID, category, gnn_data_idx(=key in data_dict).
+
     device : torch.device
-        Device to run the model on (e.g., `torch.device("cuda")` or `torch.device("cpu")`).
+        Device for model training, e.g. `torch.device("cuda")` or `"cpu"`.
+
     seed_dir : str
-        Path to the directory where model and results should be saved.
-    seed_val : int, optional
-        Random seed for reproducibility. Default is 42.
-    k_out : int, optional
-        Number of folds for StratifiedKFold. Default is 5.
-    epochs : int, optional
-        Number of training epochs per fold. Default is 50.
-    model_type : str, optional
-        Type of GNN model to use ("GAT" or "GCN"). Default is "GAT".
-    batch_size : int, optional
-        Mini-batch size for training. Default is 32.
-    lr : float, optional
-        Learning rate for the optimizer. Default is 1e-3.
-    weight_decay : float, optional
-        Weight decay (L2 regularization) coefficient for the optimizer. Helps prevent overfitting. Default is 1e-4.
+        Directory where fold results and model checkpoints will be saved.
+
+    seed_val : int
+        Random seed used for reproducibility in splitting and training.
+
+    k_out : int
+        Number of folds in the outer cross‑validation loop.
+
+    run_params : dict
+        Dictionary containing all GNN hyperparameters, including:
+            - "model_type": "GAT"
+            - "hidden_layers": list of hidden channel sizes
+            - "dropout_rate": dropout probability
+            - "output_size": dimensionality of the output (1 for binary)
+            - "pooling": "mean" or "max"
+            - "heads": number of attention heads (GAT)
+            - "weight_decay": L2 regularization
+            - "lr": learning rate
+            - "epochs": number of training epochs
+            - "batch_size": batch size
+            - "test_ratio": ratio for val split inside train set
+
     aggregation : bool, optional
-        If True, computes performance metrics using LEAP-level aggregation. Default is True.
+        If True, performs LEAP-level aggregation of predictions and 
+        computes additional ROC–AUC metrics. Default is True.
+
+    neptune_run : neptune.Run, optional
+        Neptune logging object. If provided, metrics will be logged.
 
     Returns
     -------
     If aggregation is True:
         auc : float
-            AUC score from subgraph-level predictions.
+            Subgraph‑level AUC.
         fpr : np.ndarray
-            False positive rates for ROC curve.
+            False positive rates (subgraph‑level ROC).
         tpr : np.ndarray
-            True positive rates for ROC curve.
+            True positive rates (subgraph‑level ROC).
         auc_agg : float
-            AUC score from aggregated LEAP-level predictions (mean of subgraph probs).
+            LEAP‑level AUC computed from mean predicted probability.
         fpr_agg : np.ndarray
-            FPR for ROC on aggregated predictions.
+            FPR for aggregated ROC curve.
         tpr_agg : np.ndarray
-            TPR for ROC on aggregated predictions.
+            TPR for aggregated ROC curve.
         auc_agg_filter : float
-            AUC after filtering out low-confidence predictions (probs between 0.4 and 0.6).
+            LEAP‑level AUC after filtering out subgraph probabilities
+            in the range [0.4, 0.6].
         fpr_agg_filter : np.ndarray
-            FPR for filtered ROC curve.
+            FPR for filtered aggregated ROC curve.
         tpr_agg_filter : np.ndarray
-            TPR for filtered ROC curve.
+            TPR for filtered aggregated ROC curve.
 
     If aggregation is False:
         auc : float
-            AUC score from subgraph-level predictions.
+            Subgraph‑level AUC.
         fpr : np.ndarray
-            False positive rates for ROC curve.
+            Subgraph‑level ROC curve FPR.
         tpr : np.ndarray
-            True positive rates for ROC curve.
+            Subgraph‑level ROC curve TPR.
     """
     results = []
     models_dict = {}
@@ -811,7 +837,6 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
     seeds_amount: int = 20,
     aggregation: bool = True, 
     tissue_resolution: str = 'patch_tissue', 
-    
     ):
     """
     Full training pipeline for GNN evaluation on patch-level FLIM data.
@@ -822,23 +847,47 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
     Parameters
     ----------
     feature_type : str
-        Type of features to use (e.g., "lifetime").
+        Type of node features used in the graph (e.g., "lifetime").
+    
     patch_size : int
-        Size of the image patch in pixels.
+        Patch size in pixels used during graph construction.
+
     overlap : float
-        Patch overlap as a float between 0 and 1.
+        Patch overlap fraction between 0 and 1.
+
     max_dist : int
-        Max distance threshold for edge creation in graphs.
+        Maximum spatial distance threshold used when constructing graph edges.
+
     k_out : int
-        Number of outer folds for cross-validation.
-    epochs : int
-        Number of training epochs.
-    iterations : int
-        Number of different seed runs for robustness.
-    seeds_amount : int
-        Number of seeds.
-    aggregation : bool
-        Whether to compute and evaluate aggregated predictions at LEAP level.
+        Number of folds for cross-validation.
+
+    model_params : dict
+        Dictionary containing all GNN model hyperparameters, passed directly to
+        `gnn_train_test_k_fold`, e.g.:
+            - model_type
+            - hidden_layers
+            - dropout_rate
+            - output_size
+            - pooling
+            - heads
+            - weight_decay
+            - lr
+            - epochs
+            - batch_size
+            - test_ratio
+
+    seeds_amount : int, optional
+        Number of different random seeds used for repeated training runs.
+        Default is 20.
+
+    aggregation : bool, optional
+        Whether to compute LEAP-level aggregated predictions.
+        Default is True.
+
+    tissue_resolution : str, optional
+        Directory name indicating which preprocessed dataset to load.
+        Defaults to "patch_tissue".
+
     """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -887,49 +936,6 @@ def run_patch_gnn_pipeline_per_one_model_parameters(
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
         ######## FIX ALL RANDOM SEEDS FOR REPRODUCIBILITY ########
-
-
-        # ######## neptune initialize start ########
-        # # Logging each model+seed combo as a separate run
-        # name = " | ".join([f"{k.upper()}: {v}" for k, v in model_params.items()] + [f"SEED: {seed_val}"])
-        # tags = [f"{k}:{v}" for k, v in model_params.items()] + [
-        #     f"patch_size:{patch_size}",
-        #     f"feature_type:{feature_type}"
-        # ]
-
-        # run = neptune.init_run(
-        #     project=params.neptune_project_name,
-        #     api_token=params.neptune_api_token,
-        #     name=name,
-        #     tags=tags
-        # )
-
-
-        # run["parameters"] = {
-        #     **model_params,
-        #     "hidden_channels": f"{model_params['hidden_layers']}",
-        #     "feature_type": feature_type,
-        #     "patch_size": patch_size,
-        #     "overlap": overlap,
-        #     "max_dist": max_dist,
-        #     "k_out": k_out,
-        #     "aggregation": aggregation,
-        #     "tissue_resolution": tissue_resolution,
-        #     "seed": seed_val
-        # }
-
-        # ######## neptune initialize finish ########
-
-
-        # results = gnn_train_test_k_fold(
-        #     preprocessed_data, subgraphs_df, device, seed_dir,
-        #     seed_val=seed_val, k_out=k_out, run_params=model_params,
-        #     aggregation=aggregation, neptune_run=run
-        # )
-
-        # auc_score, fpr, tpr, auc_agg, fpr_agg, tpr_agg, auc_agg_filter, fpr_agg_filter, tpr_agg_filter = results
-
-        # run.stop()
 
         results = gnn_train_test_k_fold(
             preprocessed_data, subgraphs_df, device, seed_dir,
@@ -1010,23 +1016,45 @@ def run_patch_gnn_pipeline_per_one_model_parameters_shuffling(
     Parameters
     ----------
     feature_type : str
-        Type of features to use (e.g., "lifetime").
+        Type of features used in the node attributes (e.g., "lifetime").
+    
     patch_size : int
-        Size of the image patch in pixels.
+        Patch size in pixels used to generate the graphs.
+
     overlap : float
-        Patch overlap as a float between 0 and 1.
+        Fractional overlap between patches, in [0, 1].
+
     max_dist : int
-        Max distance threshold for edge creation in graphs.
+        Maximum spatial distance used to define edges in the graph.
+
     k_out : int
-        Number of outer folds for cross-validation.
-    epochs : int
-        Number of training epochs.
-    iterations : int
-        Number of different seed runs for robustness.
+        Number of folds for cross-validation.
+
+    model_params : dict
+        Dictionary of GNN model and training hyperparameters, including:
+            - model_type
+            - hidden_layers
+            - dropout_rate
+            - output_size
+            - pooling
+            - heads
+            - weight_decay
+            - lr
+            - epochs
+            - batch_size
+            - test_ratio
+
     seed_shuffle_val : int
-        Main random seed for reproducibility.
-    aggregation : bool
-        Whether to compute and evaluate aggregated predictions at LEAP level.
+        Seed used for shuffling the feature values and for training.
+        This determines which shuffled dataset will be loaded.
+
+    aggregation : bool, optional
+        Whether to perform LEAP-level aggregation and compute
+        additional AUC metrics. Default is True.
+
+    tissue_resolution : str, optional
+        Directory name indicating which preprocessed dataset to load.
+        Defaults to "patch_tissue".
     """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -1127,23 +1155,46 @@ def run_patch_gnn_pipeline_per_one_model_parameters_structure(
     Parameters
     ----------
     feature_type : str
-        Type of features to use (e.g., "lifetime").
+        Type of features originally used (e.g., "lifetime").
+        May still be needed for directory structure, even if features are ignored.
+
     patch_size : int
-        Size of the image patch in pixels.
+        Patch size (in pixels) used to generate the graphs.
+
     overlap : float
-        Patch overlap as a float between 0 and 1.
+        Patch overlap fraction, between 0 and 1.
+
     max_dist : int
-        Max distance threshold for edge creation in graphs.
+        Maximum edge distance threshold used in graph construction.
+
     k_out : int
-        Number of outer folds for cross-validation.
-    epochs : int
-        Number of training epochs.
-    iterations : int
-        Number of different seed runs for robustness.
+        Number of folds for cross-validation.
+
+    model_params : dict
+        Dictionary of GNN model and training parameters, including:
+            - model_type
+            - hidden_layers
+            - dropout_rate
+            - output_size
+            - pooling
+            - heads
+            - weight_decay
+            - lr
+            - epochs
+            - batch_size
+            - test_ratio
+
     seed_val : int
-        Random seed for reproducibility.
-    aggregation : bool
-        Whether to compute and evaluate aggregated predictions at LEAP level.
+        Random seed used for reproducibility in model training and evaluation.
+
+    aggregation : bool, optional
+        Whether to compute LEAP-level aggregation metrics in addition to subgraph-level.
+        Default is True.
+
+    tissue_resolution : str, optional
+        Directory name indicating which preprocessed dataset to load.
+        Defaults to "patch_tissue".
+
     """
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

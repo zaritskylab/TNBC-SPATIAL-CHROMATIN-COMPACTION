@@ -19,16 +19,24 @@ The function `split_2_channel_to_1` is applied to **all `.tif` files** in the di
 
 
 def extract_leap_number_and_threshold(file_name):
- 
-    # Define the regex pattern to extract leap number and threshold
+    """
+    Extract the LEAP number and count threshold from a file name.
+
+    Parameters
+    ----------
+    file_name : str
+        Name of the file (e.g., "LEAP23_...0countthreshold.tif")
+
+    Returns
+    -------
+    tuple of str
+        (leap_number, threshold), or None if not matched.
+    """
     pattern = r"LEAP(\d+)_.*?(\d+)countthreshold\.tif"
 
-    # Use re.search to find the pattern in the file path
     match = re.search(pattern, file_name)
 
-    # Check if the pattern is found
     if match:
-        # Extract leap number and threshold from the matched groups
         leap_number = match.group(1)
         threshold = match.group(2)
 
@@ -39,6 +47,19 @@ def extract_leap_number_and_threshold(file_name):
     
 
 def extract_leap_number(file_name):
+    """
+    Extract the LEAP number from a file name.
+
+    Parameters
+    ----------
+    file_name : str
+        Name of the file (e.g., "LEAP23_...0countthreshold.tif")
+
+    Returns
+    -------
+    str or None
+        The LEAP number if found, otherwise None.
+    """
     pattern = r"LEAP(\d+)"
 
     match = re.search(pattern, file_name)
@@ -53,7 +74,19 @@ def extract_leap_number(file_name):
 
 
 def split_2_channel_to_1(directory, file_name):
+    """
+    Split a 2-channel TIFF image into separate fluorescent intensity and fluorescent lifetime channels.
 
+    Saves the two single-channel images into their respective folders,
+    using the LEAP number extracted from the file name.
+
+    Parameters
+    ----------
+    directory : str
+        Path to the folder containing the input TIFF file.
+    file_name : str
+        Name of the 2-channel TIFF file to be split.
+    """
     leap_num = extract_leap_number(file_name)
 
     os.makedirs(const.FLUORESCENT_DIR, exist_ok=True)
@@ -85,7 +118,12 @@ def split_2_channel_to_1(directory, file_name):
 
 
 def run_preprocess():
-    
+    """
+    Run preprocessing for all LEAP TIFF files.
+
+    Extracts LEAP IDs from the RCB file, finds matching raw `.tif` files,
+    and splits each into separate fluorescent intensity and fluorescent lifetime channels.
+    """
     RAW_DATA_DIR = const.RAW_DATA_DIR
     print(f"Files process start from {RAW_DATA_DIR}.")
 

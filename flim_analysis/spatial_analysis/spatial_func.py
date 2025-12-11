@@ -23,16 +23,27 @@ def process_probs_results(patch_df, prob_results_df, filter_flag=False):
     Parameters
     ----------
     patch_df : pd.DataFrame
-        DataFrame containing patch information.
-    hist_results : pd.DataFrame
-        DataFrame containing histogram results with at least the columns 'leap_ID', 'patch_ID', and 'prob_results'.
+        DataFrame containing per-nucleus data.
+
+    prob_results_df : pd.DataFrame
+        DataFrame with patch-level model predictions.
+        Must contain: 'leap_ID', 'patch_ID', 'prob_results'.
+
+    filter_flag : bool, optional
+        If True, filters out predictions with `prob_results` between 0.45 and 0.55.
+        Default is False.
 
     Returns
     -------
     pd.DataFrame
-        Aggregated DataFrame after merging, filtering, and grouping.
+        Aggregated nucleus-level DataFrame with one row per (nucleus_label, leap_ID),
+        containing:
+            - 'lifetime_mean'
+            - 'X coordinate'
+            - 'Y coordinate'
+            - 'category'
+            - 'prob_results' (mean across patches containing the nucleus)
     """
-    
     # Merge patch_df with hist_results on ['leap_ID', 'patch_ID']
     merged_df = pd.merge(
         patch_df, 
@@ -72,6 +83,19 @@ def process_probs_results(patch_df, prob_results_df, filter_flag=False):
 ######### lifetime distribution - patch_wise #########
 ######################################################
 def get_all_seeds_results(base_dir):
+    """
+    Load prediction results for all seed folders and compute aggregated AUC.
+
+    Parameters
+    ----------
+    base_dir : str
+        Directory containing seed result folders (e.g., 'seed_1', 'seed_35', ...).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with columns ['seed', 'auc'] containing one row per seed.
+    """
     results = []
     
     # Loop over everything in the base directory
@@ -106,7 +130,19 @@ def get_all_seeds_results(base_dir):
     return results_df
 
 def find_seed_closest_to_median_auc(base_dir):
+    """
+    Find the seed whose AUC is closest to the median AUC across all seeds.
 
+    Parameters
+    ----------
+    base_dir : str
+        Directory containing subfolders named 'seed_*' with prediction results.
+
+    Returns
+    -------
+    int or None
+        The seed number closest to the median AUC, or None if no valid results found.
+    """
     results_df = get_all_seeds_results(base_dir)
 
     if results_df.empty:
@@ -132,7 +168,19 @@ def find_seed_closest_to_median_auc(base_dir):
 
 
 def find_seed_best_auc(base_dir):
-    
+    """
+    Find the seed with the highest AUC score across all seed runs.
+
+    Parameters
+    ----------
+    base_dir : str
+        Directory containing 'seed_*' folders with prediction results.
+
+    Returns
+    -------
+    int or None
+        The seed number with the highest AUC, or None if no valid results found.
+    """ 
     # Convert results to a DataFrame
     results_df = get_all_seeds_results(base_dir)
     
@@ -157,7 +205,22 @@ def find_seed_best_auc(base_dir):
     return seed_best
 
 def extract_hist_results(hist_base_dir, seed_num):
+    """
+    Load and preprocess prediction results for a specific seed.
 
+    Parameters
+    ----------
+    hist_base_dir : str
+        Base directory containing 'seed_*' subfolders with prediction files.
+    
+    seed_num : int
+        Seed number used to locate the correct subfolder (e.g., seed_42).
+
+    Returns
+    -------
+    pd.DataFrame
+        Preprocessed DataFrame with columns: 'leap_ID', 'patch_ID', 'prob_results'.
+    """
     # Construct the path to the predictions CSV for the given seed
     seed_results = os.path.join(hist_base_dir, f"seed_{seed_num}", "predictions.csv")
     
@@ -182,31 +245,22 @@ def extract_hist_results(hist_base_dir, seed_num):
 
 def process_hist_results(patch_df, hist_base_dir, seed_type='best'):
     """
-    Process histogram results from a specified seed and merge with patch_df.
-    
-    The process includes:
-      - Reading the predictions CSV from the seed folder.
-      - Renaming columns: "sample_id" -> "leap_ID", "instance_id" -> "patch_ID", "y_pred" -> "prob_results".
-      - Removing the first 4 characters from the 'leap_ID' column.
-      - Merging with patch_df on ['leap_ID', 'patch_ID'].
-      - Printing diagnostics (number of NaN rows and max values) if debug=True.
-      - Filtering rows based on prob_results (<=0.4 or >=0.6).
-      - Aggregating by 'nucleus_label' and 'leap_ID' (keeping the first occurrence for several columns and the mean for 'prob_results').
+    Process distribution results from a specified seed and merge with patch_df.
     
     Parameters
     ----------
     patch_df : pd.DataFrame
-        DataFrame containing patch-level information to merge with histogram results.
+        DataFrame containing patch-level information to merge with distribution results.
     hist_base_dir : str
-        Base directory for the histogram results (e.g., including overlap and other parameters).
-    seed_num : int or str
-    debug : bool, optional
-        If True, print diagnostic information. Default is True.
+        Base directory for the distribution results (e.g., including overlap and other parameters).
+    seed_type :  str
+        Type of seed selection: 'median' to select the seed closest to median AUC,
+        'best' to select the seed with the highest AUC. Default is 'best'.
     
     Returns
     -------
     pd.DataFrame
-        The aggregated DataFrame after processing the histogram results.
+        The aggregated DataFrame after processing the distribution results.
     """
     
     if seed_type=='median':
@@ -235,6 +289,40 @@ def extract_gnn_results(
     max_dist=30,
     model_params="model_type_GAT_batch_size_16_lr_0.001"):
     
+    """
+    Load and preprocess GNN prediction results for a specific seed and model config.
+
+    Parameters
+    ----------
+    seed_num : int
+        Seed number (e.g., 42) used to locate the corresponding result folder.
+
+    patch_size : int
+        Size of patches used in the graph construction.
+
+    date_time : str
+        Date string indicating the run folder (e.g., '01_10_2025').
+
+    overlap : float, optional
+        Patch overlap fraction. Default is 0.75.
+
+    feature_type : str, optional
+        Feature type used in GNN input (default is 'lifetime').
+
+    tissue_resolution : str, optional
+        Subdirectory under GNN_DIR for resolution type (default is 'patch_tissue').
+
+    max_dist : int, optional
+        Maximum distance threshold used for edge creation. Default is 30.
+
+    model_params : str, optional
+        Folder name corresponding to specific model hyperparameters.
+
+    Returns
+    -------
+    pd.DataFrame
+        Processed DataFrame with columns 'leap_ID', 'patch_ID', and 'prob_results'.
+    """
     # 1. Build the paths
     patch_params = f"size_{patch_size}_overlap_{overlap}"
     graph_file_dir = os.path.join(

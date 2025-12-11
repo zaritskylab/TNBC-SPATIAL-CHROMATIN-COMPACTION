@@ -138,6 +138,45 @@ def plot_mean_auc_roc_lists(
     title='ROC Curves',
     extra_fpr=None, extra_tpr=None, extra_auc=None, extra_label=None
 ):
+
+    """
+    Plot the mean ROC curve with standard deviation shading across multiple folds or seeds.
+
+    Parameters
+    ----------
+    fpr_list : list of np.ndarray
+        List of false positive rate arrays from different folds or runs.
+
+    tpr_list : list of np.ndarray
+        List of true positive rate arrays corresponding to `fpr_list`.
+
+    auc_data : list of float
+        AUC values from different runs (used to show mean and std in plot label).
+
+    std_num : int, optional
+        Number of standard deviations to use for the shaded area. Default is 1.
+
+    save_file_path : str or bool, optional
+        Directory path to save the figure. If False, does not save. Default is False.
+
+    save_file_name : str, optional
+        File name (without extension) to use when saving the figure.
+
+    title : str, optional
+        Title of the plot. Default is 'ROC Curves'.
+
+    extra_fpr : np.ndarray, optional
+        FPR values for an additional ROC curve to overlay.
+
+    extra_tpr : np.ndarray, optional
+        TPR values for the additional ROC curve.
+
+    extra_auc : float, optional
+        AUC value for the additional ROC curve.
+
+    extra_label : str, optional
+        Custom legend label for the additional ROC curve.
+    """
     mean_fpr = np.unique(np.concatenate(fpr_list))
     tpr_interpolated = np.zeros((len(fpr_list), len(mean_fpr)))
 
@@ -246,6 +285,19 @@ def plot_boxplot_by_category(df, col, category_col='category', title=None, ylabe
 
 
 def plot_histogram(correlation):
+    """
+    Plot a histogram with KDE for a given list or array of correlation values.
+
+    Parameters
+    ----------
+    correlation : array-like
+        List or array of correlation coefficients to visualize.
+
+    Returns
+    -------
+    matplotlib.pyplot
+        The plot object for further customization or saving.
+    """
     # Plot the correlation distribution
     sns.histplot(correlation, kde=True)
 
@@ -619,8 +671,34 @@ def plot_full_and_zoom_separately_with_colorbar(
 
 ):
     """
-    Display full image and zoom-in region in separate figures,
-    each with a scale bar and color bar (no title, clean layout).
+    Displays a full FLIM image and a zoomed-in region as separate figures,
+    each with a scale bar and optional color bar.
+
+    Parameters
+    ----------
+    img_path : str
+        Path to the input .tif image.
+    center : tuple of int, optional
+        (x, y) coordinates for the center of the zoomed-in region.
+    zoom_size : int, optional
+        Size (in pixels) of the square zoomed region.
+    using_mask : bool, optional
+        If True, mask out zero values before display.
+    cmap_col : str, optional
+        Name of the matplotlib colormap to use.
+    pixel_size_um : float, optional
+        Pixel size for scale bar.
+    save_full_name : str or None, optional
+        File name (without extension) to save the full image figure.
+    save_zoom_name : str or None, optional
+        File name (without extension) to save the zoomed image figure.
+    save_colorbar_name : str or None, optional
+        File name (without extension) to save the color bar figure (PDF).
+    save_dir : str or None, optional
+        Directory where output images will be saved.
+    color_bar : bool, optional
+        Whether to generate and save a separate color bar figure.
+
     """
     # Load and gamma correct
     image = tifffile.imread(img_path).astype(np.float32)
@@ -717,6 +795,18 @@ def plot_hist_plt(df, title, x_label, bins_amount=30):
 
 
 def plot_hist_sns(df, title, x_label):
+    """    
+    Plots a histogram with a KDE (kernel density estimate) using seaborn.
+
+    Parameters
+    ----------
+    df : pd.Series or array-like
+        Data to be plotted in the histogram.
+    title : str
+        Title of the plot.
+    x_label : str
+        Label for the x-axis.
+    """
     sns.histplot(df, kde=True)
 
     # Set labels and title
@@ -733,6 +823,26 @@ def plot_hist_sns(df, title, x_label):
 
 
 def category_seperation_by_feature(df, feature_name, mapping={'non responder': 1, 'responder': 0}, order=None):
+    """
+    Visualizes and evaluates how well a feature separates categories.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing the feature values and category labels.
+    feature_name : str
+        Name of the feature column to analyze.
+    mapping : dict, optional
+        Mapping of category labels to binary values for AUC calculation.
+        Default is {'non responder': 1, 'responder': 0}.
+    order : list, optional
+        Specific order of category labels to display in the boxplot.
+
+    Returns
+    -------
+    plt.Figure
+        The matplotlib figure object containing the boxplot.
+    """
     plt_fig = plot_boxplot_by_category(df, feature_name, order=order)
     # Split data into two groups based on 'category'
     non_responders = df[df['category'] == 'non responder'][feature_name]
@@ -759,6 +869,26 @@ def category_seperation_by_feature(df, feature_name, mapping={'non responder': 1
 
     ########### Spatial information plots ###########
 def plot_probability_map_one_leap(df, leap_number, category, with_axis=False):
+    """
+    Plots a spatial probability map for a single LEAP sample.
+
+    Displays a scatter plot of nuclei positions (X, Y) colored by their predicted
+    responder probability. Useful for visualizing spatial patterns of predictions
+    across tissue.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing at least the columns 'X coordinate', 'Y coordinate',
+        and 'prob_results' for a single LEAP.
+    leap_number : int or str
+        Identifier of the LEAP sample to display in the plot title.
+    category : str
+        True category label of the LEAP sample (e.g., "responder" or "non responder").
+    with_axis : bool, optional
+        If True, displays axis ticks and grid; otherwise hides axes for a cleaner layout.
+
+    """
     x = df['X coordinate']
     y = df['Y coordinate']
     density = df['prob_results']
@@ -790,6 +920,24 @@ def plot_probability_map_one_leap(df, leap_number, category, with_axis=False):
 
 
 def plot_probability_map_some_leaps(df, leap_ids, category, row, column):
+    """
+    Plots probability maps for multiple LEAP samples in a grid layout.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing columns 'leap_ID', 'category', 'X coordinate',
+        'Y coordinate', and 'prob_results'.
+    leap_ids : list
+        List of LEAP IDs to include in the plots.
+    category : str
+        Category to filter the data (e.g., 'responder' or 'non responder').
+    row : int
+        Number of rows in the subplot grid.
+    column : int
+        Number of columns in the subplot grid.
+
+    """
     fig, axes = plt.subplots(column, row, figsize=(column*4, row*4), constrained_layout=True)
     fig.suptitle(f'{category.capitalize()} Probability Maps', fontsize=24, fontweight='bold')
 
@@ -818,6 +966,24 @@ def plot_probability_map_some_leaps(df, leap_ids, category, row, column):
 
 
 def plot_probability_map_custom(df, leap_ids, category, add_sample_id=False, save_path=None):
+    """
+    Plots probability maps of multiple LEAP samples in a flexible grid layout.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing at least 'leap_ID', 'category', 'X coordinate',
+        'Y coordinate', and 'prob_results' columns.
+    leap_ids : list
+        List of LEAP IDs to plot.
+    category : str
+        Category to filter data by (e.g., 'responder' or 'non responder').
+    add_sample_id : bool, optional
+        If True, adds the LEAP ID as a title above each subplot. Default is False.
+    save_path : str or None, optional
+        If provided, saves the figure to the given path as a high-resolution PDF.
+
+    """
     # Determine the number of rows and columns for the subplot grid
     n_leaps = len(leap_ids)
     n_cols = min(6, n_leaps)
@@ -870,6 +1036,18 @@ def plot_probability_map_custom(df, leap_ids, category, add_sample_id=False, sav
 
 
 def probability_maps_r_nr(aggregated_df, show_sample_id=False):
+    """
+    Plots probability maps for responders and non-responders separately.
+
+    Parameters
+    ----------
+    aggregated_df : pd.DataFrame
+        DataFrame containing probability results and metadata, including 
+        'leap_ID', 'category', 'X coordinate', 'Y coordinate', and 'prob_results'.
+    show_sample_id : bool, optional
+        If True, displays LEAP IDs as subplot titles. Default is False.
+
+    """
     responder_leaps = aggregated_df[aggregated_df['category'] == 'responder']['leap_ID'].unique()
     non_responder_leaps = aggregated_df[aggregated_df['category'] == 'non responder']['leap_ID'].unique()
     plot_probability_map_custom(aggregated_df, non_responder_leaps, 'non responder', show_sample_id)
@@ -878,6 +1056,33 @@ def probability_maps_r_nr(aggregated_df, show_sample_id=False):
 
 
 def plot_one_transition(leap_id, prob_coords, lifetime_and_prob_df, radius_list, radius_colors_dict, path_colors=['black'], figure_save_dir=None, save_plot=False, val_min=0, val_max=1):
+    """
+    Visualizes spatial transitions and local lifetime changes in a tissue sample.
+
+    Parameters
+    ----------
+    leap_id : str or int
+        Identifier for the tissue sample (LEAP number).
+    prob_coords : pd.DataFrame
+        DataFrame with shape coordinates (x, y) and their order (vertex-index) for the transition.
+    lifetime_and_prob_df : pd.DataFrame
+        DataFrame containing 'X coordinate', 'Y coordinate', and 'lifetime_mean' for each point.
+    radius_list : list
+        List of radii (in pixels) used for neighborhood lifetime averaging.
+    radius_colors_dict : dict
+        Dictionary mapping each radius to a display color.
+    path_colors : list, optional
+        List of colors for each spatial path (default is black).
+    figure_save_dir : str, optional
+        Directory to save the plots.
+    save_plot : bool, optional
+        Whether to save the plots as files.
+    val_min : float, optional
+        Minimum value for the probability colormap.
+    val_max : float, optional
+        Maximum value for the probability colormap.
+
+    """
     # prob_coords = pd.read_csv(prob_coords_leap_path)
     # prob_coords['vertex-index'] = prob_coords['vertex-index']+1
 
@@ -1023,6 +1228,34 @@ def plot_one_transition(leap_id, prob_coords, lifetime_and_prob_df, radius_list,
         plt.show()
 
 def plot_transition_2_path_homo_region(leap_id, prob_coords, lifetime_and_prob_df, radius_list, radius_colors_dict, path_colors=['red', 'black'], figure_save_dir=None, save_plot=False, val_min=0, val_max=1):
+    """
+    Visualizes two manually defined spatial paths on a probability map, and plots the
+    average fluorescence lifetime along each path for different neighborhood radii.
+
+    Parameters
+    ----------
+    leap_id : str or int
+        Identifier for the LEAP sample to visualize.
+    prob_coords : pd.DataFrame
+        DataFrame with shape coordinates (x, y) and vertex order per path (`index`, `vertex-index`).
+    lifetime_and_prob_df : pd.DataFrame
+        DataFrame containing 'X coordinate', 'Y coordinate', 'lifetime_mean', and 'leap_ID'.
+    radius_list : list
+        List of radii (in pixels) to compute neighborhood-based mean lifetimes.
+    radius_colors_dict : dict
+        Dictionary mapping each radius to its plot color.
+    path_colors : list, optional
+        Colors to use for the two spatial paths (default ['red', 'black']).
+    figure_save_dir : str, optional
+        Directory where plots will be saved (if save_plot is True).
+    save_plot : bool, optional
+        Whether to save plots to disk.
+    val_min : float, optional
+        Minimum value for FLIM image color scale.
+    val_max : float, optional
+        Maximum value for FLIM image color scale.
+
+    """
     # prob_coords = pd.read_csv(prob_coords_leap_path)
     # prob_coords['vertex-index'] = prob_coords['vertex-index']+1
 
@@ -1146,13 +1379,47 @@ def plot_transition_2_path_homo_region(leap_id, prob_coords, lifetime_and_prob_d
 
 
 def truncate_cmap(cmap, minval=0.3, maxval=0.8, n=100):
-    """Clip a colormap to avoid very pale/near-white tones."""
+    """
+    Truncates a matplotlib colormap to a specified value range.
+
+    Parameters
+    ----------
+    cmap : matplotlib.colors.Colormap
+        The original colormap to truncate.
+    minval : float, optional
+        Minimum value (between 0 and 1) for the new colormap range (default: 0.3).
+    maxval : float, optional
+        Maximum value (between 0 and 1) for the new colormap range (default: 0.8).
+    n : int, optional
+        Number of color levels in the truncated colormap (default: 100).
+
+    Returns
+    -------
+    matplotlib.colors.LinearSegmentedColormap
+        A new colormap truncated to the specified range.
+    """
+
     return mcolors.LinearSegmentedColormap.from_list(
         f'trunc({cmap.name},{minval:.2f},{maxval:.2f})',
         cmap(np.linspace(minval, maxval, n))
     )
 
 def size_for_radius(r, radius_list):
+    """
+    Maps a radius value to a corresponding marker size for legend/display.
+
+    Parameters
+    ----------
+    r : float
+        The current radius value.
+    radius_list : list of float
+        List of all radii used, for determining scaling range.
+
+    Returns
+    -------
+    float
+        Marker size corresponding to the input radius.
+    """
     # Legend circle sizes (points, not data units)
     rmin, rmax = min(radius_list), max(radius_list)
     min_ms, max_ms = 8, 18  # tweak for more/less size contrast
@@ -1163,6 +1430,44 @@ def size_for_radius(r, radius_list):
 
 
 def plot_transition_2_path_homo_hetro_region(leap_id, prob_coords, lifetime_and_prob_df, radius_list, figure_save_dir=None, save_plot=False, val_min=0, val_max=1):
+    """
+    Plot spatial transitions for two annotated paths (homogeneous vs heterogeneous regions)
+    overlaid on FLIM probability maps for a given tissue sample (LEAP ID).
+
+    Parameters
+    ----------
+    leap_id : str or int
+        Identifier for the LEAP tissue sample.
+
+    prob_coords : pd.DataFrame
+        DataFrame with coordinates of points along the spatial paths. Must include:
+            - 'index': path identifier
+            - 'vertex-index': order of points
+            - 'axis-0': y-coordinates
+            - 'axis-1': x-coordinates
+
+    lifetime_and_prob_df : pd.DataFrame
+        DataFrame containing nuclei-level data with columns:
+            - 'leap_ID'
+            - 'X coordinate', 'Y coordinate'
+            - 'lifetime_mean'
+
+    radius_list : list of float
+        Radii used to compute mean lifetime around each spatial point.
+
+    figure_save_dir : str, optional
+        Directory to save the output plots (default is None).
+
+    save_plot : bool, optional
+        If True, the plots will be saved to `figure_save_dir` (default is False).
+
+    val_min : float, optional
+        Minimum intensity value for image display (default is 0).
+
+    val_max : float, optional
+        Maximum intensity value for image display (default is 1).
+    """
+
     print(f"leap - {leap_id}")
     # ---- Load and prep path coordinates ----
     # prob_coords = pd.read_csv(prob_coords_leap_path)

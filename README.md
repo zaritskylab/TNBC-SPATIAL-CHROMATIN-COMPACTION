@@ -172,7 +172,7 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py core -
 
 ```bash
 # Tissue-wise lifetime distribution treatment classification 
-python -m flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
+python flim_analysis/distribution_classification/treatment_classification_tissue_wise --dist_csv_name features_lifetime_distribution_data_max_val_13_bins_amount_18_bin_range_0.73.csv --n_seeds 100 --n_permutations 1000
 ```
 
 ### Patch analysis
@@ -188,7 +188,7 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py patch 
 
 ```bash
 # Patch-wise lifetime distribution treatment classification 
-python -m flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 100 --n_permutations 1000
+python flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 100 --n_permutations 1000
 ```
 
 ### GNN Classification

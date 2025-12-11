@@ -11,12 +11,37 @@ from scipy.stats import mannwhitneyu, stats
 
 
 def csv_to_tiff(csv_file_name, tiff_file_name):
+    """
+    Convert a CSV file of pixel values into a TIFF image.
+
+    Parameters
+    ----------
+    csv_file_name : str
+        Path to the input CSV file containing image data.
+    tiff_file_name : str
+        Output path where the TIFF image will be saved.
+    """
     image_array = np.genfromtxt(csv_file_name, delimiter=',')
     my_image = Image.fromarray(image_array)
     my_image.save(tiff_file_name)
     
 
 def extract_info_from_filename(filename):
+    """
+    Extract LEAP number and slide number from a filename.
+
+    Expected format: 'LEAP<id>_slide<id>...'
+
+    Parameters
+    ----------
+    filename : str
+        Filename to parse.
+
+    Returns
+    -------
+    tuple(str, str) or (None, None)
+        Extracted (leap_number, slide_number), or (None, None) if not found.
+    """
     match = re.match(r"LEAP(\d+)_slide(\d+)", filename)
     if match:
         leap_number = match.group(1)
@@ -51,6 +76,14 @@ def get_leap_filenames(directory):
         return []
 
 def delete_directory(directory_path):
+    """
+    Delete a directory and all its contents if it exists.
+
+    Parameters
+    ----------
+    directory_path : str
+        Full path to the directory to be deleted.
+    """
     if os.path.exists(directory_path):
         shutil.rmtree(directory_path)
         print(f"Deleted: {directory_path}")
@@ -58,6 +91,17 @@ def delete_directory(directory_path):
         print(f"Directory does not exist: {directory_path}")
 
 def delete_files(files_dir, file_signature):
+    """
+    Delete all files in a directory that end with a given signature.
+
+    Parameters
+    ----------
+    files_dir : str
+        Path to the directory containing the files.
+
+    file_signature : str
+        File name ending pattern to match (e.g., '.pkl').
+    """
     feature_files = [
         os.path.join(files_dir, f)
         for f in os.listdir(files_dir)
@@ -103,12 +147,48 @@ def delete_results_dirs(base_dir, delete_dir):
 
 
 def save_fig(save_file_path, save_file_name, format_type, plt_fig, transparent=True):
+    """
+    Save a matplotlib figure to disk in the specified format.
+
+    Parameters
+    ----------
+    save_file_path : str
+        Directory where the figure should be saved.
+
+    save_file_name : str
+        File name without extension.
+
+    format_type : str
+        Format to save the figure in (e.g., 'png', 'pdf', 'svg').
+
+    plt_fig : matplotlib.figure.Figure
+        The matplotlib figure object to save.
+
+    transparent : bool, optional
+        Whether to save the figure with a transparent background. Default is True.
+    """
     format_path = f'{save_file_path}/{save_file_name}.{format_type}'
     plt_fig.savefig(format_path, bbox_inches='tight', dpi=1200, transparent=transparent, format=format_type)
     print(f"Figure saved as {format_type} at: {format_path}")
 
 
 def read_patches_files(patch_size, patch_overlap):
+    """
+    Load the filtered FLIM patch-level feature file for a given patch config.
+
+    Parameters
+    ----------
+    patch_size : int
+        Patch size used during preprocessing.
+
+    patch_overlap : float
+        Overlap value used during patch extraction (e.g., 0.75).
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame of patch-level features with 'leap_ID' as string dtype.
+    """
     # Construct file and directory paths
     patch_features_file_name = f"FLIM_features_patches_size_{patch_size}_overlap_{patch_overlap}_after_filter.csv"
     specific_patch_dir = os.path.join(const.PATCH_DIR, f"size_{patch_size}_overlap_{patch_overlap}")
@@ -252,6 +332,25 @@ def upper_one_tailed_u_test(data, mu_0=0.5, significance_level=0.05):
 
 
 def upper_one_tailed_t_test(data, mu_0=0.5, significance_level=0.05):
+    """
+    Perform a one-sample upper one-tailed t-test.
+
+    Parameters
+    ----------
+    data : array-like
+        Sample data to test.
+    
+    mu_0 : float, optional
+        Null hypothesis mean. Default is 0.5.
+    
+    significance_level : float, optional
+        Significance threshold (alpha). Default is 0.05.
+
+    Returns
+    -------
+    dict: A dictionary with t-statistic, p-value, adjusted significance level, and conclusion.
+    """
+
     # Perform a t-test
     t_stat, p_value = stats.ttest_1samp(data, popmean=mu_0, alternative='greater')
 
