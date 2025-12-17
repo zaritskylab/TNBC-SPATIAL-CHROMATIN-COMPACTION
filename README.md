@@ -1,6 +1,6 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results alongside scripts for [(see Direct Script Run)](#6-direct-script-run) and usage examples [(see Notebook Examples)](#7-notebook-examples) that enable running individual stages of the pipeline.
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results alongside scripts [(see Direct Script Run)](#6-direct-script-run) and usage examples [(see Notebook Examples)](#7-notebook-examples) that enable running individual stages of the pipeline.
 
 ## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
@@ -25,9 +25,7 @@ This repo is based on a retrospective cohort obtained from triple-negative breas
 
 ```bash
 FLIM/
-├── metadata/ # Image acquisition metadata
-│   ├── LEAP015_slide7_extreme-non-responder_0countthreshold_properties.xml
-│   └── ... Other .xml files corresponding to each LEAP ID
+├── cohort_metadata.csv # Clinical metadata
 ├── raw/ # Raw FLIM images
 │   ├── LEAP015_slide7_extreme-non-responder_0countthreshold.tif
 │   └── ... Other .tif files corresponding to each LEAP ID
@@ -37,15 +35,21 @@ FLIM/
 ├── segmentations_after_qc/ # Single nuclei segmentation maps after quality control (can also be created by the repo using the raw data and segmentation maps)
 │   ├── LEAP015_segmentation_labels_qc.tif
 │   └── ... Other .tif files corresponding to each LEAP ID
-└── cohort_metadata.csv # Clinical metadata
+└── metadata/ # Image acquisition metadata
+    ├── LEAP015_slide7_extreme-non-responder_0countthreshold_properties.xml
+    └── ... Other .xml files corresponding to each LEAP ID
 ```
 
 ### 2.2. Download
 
-Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
+Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine (339 files). The folder structure should match the one shown in the [Data overview section](#21-data-overview) (you can refer to the BioImage Archive's [download help guide](https://www.ebi.ac.uk/bioimage-archive/help-download/), which includes options for bulk download). After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
 
 ```python
 DATA_DIR = "PATH-TO-THE-DATA"
+```
+By default, in our code this path is defined relative to the base analysis directory like so:
+```python
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 ```
 
 ## 3. Repo Installation and Setup
@@ -72,7 +76,7 @@ pip install -e .
 
 ## 4. Configuration Check
 
-Before running any part of this code, make sure you set the base directory for the analysis specified in [config/const.py](config/const.py) by the `BASE_DIR` variable. This is where all the computational outputs will be saved. 
+Before running any part of this code, make sure you set the base directory for the analysis specified in [config/const.py](config/const.py) by the `BASE_DIR` variable. This is where all the data and computational outputs will be saved. 
 
 ```python
 # config/const.py
@@ -142,14 +146,28 @@ Top-level directory for exploratory and paper-figure creation notebooks.
 
 #### `analysis_paper_result_reproduce/`
 Organized by figure number — contains both **main** and **supplementary** figure notebooks:
+- `_preparation.ipynb` vs `_visualize.ipynb` convention used for clean separation between data generation and plotting
 - `Figure_1.ipynb` – `Figure_4.ipynb`: Main paper figures
 - `Supplementary/`: Supplementary figure generation and visualization notebooks
-- `_preparation.ipynb` vs `_visualize.ipynb` convention used for clean separation between data generation and plotting
 
 #### `usage_example/`
 Contains runnable examples demonstrating how to use the main components of the pipeline.
 
-## 6. Direct Script Run
+## 6. Notebook Examples
+The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
+
+- `run_example_preprocess_segmentation.ipynb`  
+  Demonstrates data preprocessing, segmentation and segmentation quality control.
+
+- `run_example_feature_extraction.ipynb`  
+  Shows how to run feature extraction on preprocessed and segmented data.
+
+- `run_example_gnn_build_train.ipynb`  
+  Builds graphs and trains the GNN model using extracted features.
+
+Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
+
+## 7. Direct Script Run
 **You should run the scripts by the order given here as some depend on others (unless stated that it is not required).**
 
 ### Preprocessing
@@ -221,20 +239,6 @@ python flim_analysis/feature_extraction/extract_features.py resection
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
 
-## 7. Notebook Examples
-
-The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
-
-- `run_example_preprocess_segmentation.ipynb`  
-  Demonstrates data preprocessing, segmentation and segmentation quality control.
-
-- `run_example_feature_extraction.ipynb`  
-  Shows how to run feature extraction on preprocessed and segmented data.
-
-- `run_example_gnn_build_train.ipynb`  
-  Builds graphs and trains the GNN model using extracted features.
-
-Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
 
 ## 8. License
 
@@ -248,4 +252,4 @@ If you use this code, please cite:
 
 
 ## 9. Contact
-Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for bugs or questions regarding this repo.
+Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for comments or questions regarding this repo.
