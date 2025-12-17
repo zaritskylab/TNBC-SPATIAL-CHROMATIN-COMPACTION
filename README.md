@@ -1,6 +1,6 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results alongside scripts [(see Direct Script Run)](#6-direct-script-run) and usage examples [(see Notebook Examples)](#7-notebook-examples) that enable running individual stages of the pipeline.
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results alongside scripts [(see Direct Script Run)](#7-direct-script-run) and usage examples [(see Notebook Examples)](#6-notebook-examples) that enable running individual stages of the pipeline.
 
 ## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
@@ -177,7 +177,8 @@ python flim_analysis/preprocessing/processing.py
 ```
 ### Segmentation
 ```bash
-# NOTE: This step is not required as data folder already contains segmentations. Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
+# NOTE: This step is not required as data folder already contains segmentations. 
+# Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
 python flim_analysis/preprocessing/segmentation.py
 ```
 ### Full tissue analysis
@@ -242,14 +243,26 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py resect
 
 ## 8. License
 
-This repository is released under the Creative Commons Attribution–NonCommercial 4.0 International License. Commercial use is not permitted, and any reuse or modification requires proper attribution to the original authors.
+This repository is released under the Creative Commons Attribution–NonCommercial 4.0 International License. See [LICENSE](LICENSE) for details. Commercial use is not permitted, and any reuse or modification requires proper attribution to the original authors.
 
 ## 9. Citation
 
 If you use this code, please cite:
+If you use this implementation in your research, please cite:
 
+```bibtex
+@article{mealem2025spatial,
+  title={Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer},
+  author={Mealem, Reut and Phillips, Thomas A. and Rose, Leor Ariel and Marcotti, Stefania and Parsons, Maddy and Zaritsky, Assaf},
+  journal={bioRxiv},
+  pages={2025.12.04.692131},
+  year={2025},
+  publisher={Cold Spring Harbor Laboratory},
+  doi={10.64898/2025.12.04.692131}
+}
+```
 > Mealem, R. et al. Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer. 2025.12.04.692131 Preprint at https://doi.org/10.64898/2025.12.04.692131 (2025). 
 
 
-## 9. Contact
+## 10. Contact
 Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for comments or questions regarding this repo.
