@@ -1,6 +1,6 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [Repository Overview](#5.-repository-overview). It also provides reproducible notebooks to recreate the paper’s results, alongside scripts and usage examples that enable running individual stages of the pipeline.
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [Repository overview](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results, alongside scripts and usage examples that enable running individual stages of the pipeline.
 
 ## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
