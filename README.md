@@ -1,6 +1,6 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis. It also provides reproducible notebooks to recreate the paper’s results, alongside scripts and usage examples that enable running individual stages of the pipeline.
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [Repository Overview](#5.-repository-overview). It also provides reproducible notebooks to recreate the paper’s results, alongside scripts and usage examples that enable running individual stages of the pipeline.
 
 ## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
@@ -79,7 +79,7 @@ Before running any part of this code, make sure you set the base directory for t
 BASE_DIR = "/your/full/path/to/analysis"
 ```
 
-## 5. Repository overview
+## 5. Repository Overview
 
 ```bash
 TNBC-SPATIAL-CHROMATIN-COMPACTION/
@@ -149,7 +149,7 @@ Organized by figure number — contains both **main** and **supplementary** figu
 #### `usage_example/`
 Contains runnable examples demonstrating how to use the main components of the pipeline.
 
-## 6. Direct script run
+## 6. Direct Script Run
 **You should run the scripts by the order given here as some depend on others (unless stated that it is not required).**
 
 ### Preprocessing
@@ -221,7 +221,7 @@ python flim_analysis/feature_extraction/extract_features.py resection
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
 
-## 7. Notebook examples
+## 7. Notebook Examples
 
 The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
 
