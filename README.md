@@ -1,5 +1,8 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis. It also provides reproducible notebooks to recreate the paper’s results, alongside scripts and usage examples that enable running individual stages of the pipeline .
+
+## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
 
 1. Institute for Interdisciplinary Computational Science, Faculty of Computer and Information Science, Ben-Gurion University of the Negev, Beer-Sheva 84105, Israel
@@ -14,11 +17,11 @@ Graph neural network analysis established that the spatial arrangement of chroma
 
 To read the full research paper go to the following link **[Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer](https://doi.org/10.64898/2025.12.04.692131)**
 
-## Dataset Setup
+## 2. Dataset Setup
 
 This repo is based on a retrospective cohort obtained from triple-negative breast cancer (TNBC) patients prior to neoadjuvant chemotherapy (NACT). **You must download it and set the paths in the code before running anything**.
 
-### Data overview
+### 2.1. Data overview
 
 ```bash
 FLIM/
@@ -37,7 +40,7 @@ FLIM/
 └── cohort_metadata.csv # Clinical metadata
 ```
 
-### Download
+### 2.2. Download
 
 Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine. After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
 
@@ -45,9 +48,9 @@ Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418)
 DATA_DIR = "PATH-TO-THE-DATA"
 ```
 
-## Repo Installation and Setup
+## 3. Repo Installation and Setup
 
-### 1. Clone the Repository
+### 3.1. Clone the Repository
 
 You must clone the repository and change directory into the cloned repository. Run the following commands:
 
@@ -56,7 +59,7 @@ git clone https://github.com/zaritskylab/TNBC-SPATIAL-CHROMATIN-COMPACTION
 cd TNBC-SPATIAL-CHROMATIN-COMPACTION
 ```
 
-### 2. Environment installation
+### 3.2. Environment installation
 
 Make sure the [pyproject.toml](pyproject.toml) file lives at the root of the repo as it is required for correct installation of the Python environment and packages. Run the following commands:
 
@@ -67,7 +70,7 @@ pip install -e .
 ```
 
 
-## Configuration Check
+## 4. Configuration Check
 
 Before running any part of this code, make sure you set the base directory for the analysis specified in [config/const.py](config/const.py) by the `BASE_DIR` variable. This is where all the computational outputs will be saved. 
 
@@ -76,7 +79,7 @@ Before running any part of this code, make sure you set the base directory for t
 BASE_DIR = "/your/full/path/to/analysis"
 ```
 
-## Repository overview
+## 5. Repository overview
 
 ```bash
 TNBC-SPATIAL-CHROMATIN-COMPACTION/
@@ -218,7 +221,7 @@ python flim_analysis/feature_extraction/extract_features.py resection
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
 
-## Notebook examples
+## 6. Notebook examples
 
 The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
 
@@ -233,16 +236,16 @@ The `notebooks/usage_example` folder contains three Jupyter notebooks that illus
 
 Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
 
-## License
+## 7. License
 
 This repository is released under the Creative Commons Attribution–NonCommercial 4.0 International License. Commercial use is not permitted, and any reuse or modification requires proper attribution to the original authors.
 
-## Citation
+## 8. Citation
 
 If you use this code, please cite:
 
 > Mealem, R. et al. Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer. 2025.12.04.692131 Preprint at https://doi.org/10.64898/2025.12.04.692131 (2025). 
 
 
-## Contact
+## 9. Contact
 Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for bugs or questions regarding this repo.
