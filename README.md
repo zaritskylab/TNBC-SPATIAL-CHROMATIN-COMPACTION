@@ -20,20 +20,20 @@ This repo is based on a retrospective cohort obtained from triple-negative breas
 
 ### Data overview
 
-```
+```bash
 FLIM/
 ├── metadata/ # Image acquisition metadata
 │   ├── LEAP015_slide7_extreme-non-responder_0countthreshold_properties.xml
-│   └── ... Other .xml files for each LEAP ID
+│   └── ... Other .xml files corresponding to each LEAP ID
 ├── raw/ # Raw FLIM images
 │   ├── LEAP015_slide7_extreme-non-responder_0countthreshold.tif
-│   └── ... Other .tif files for each LEAP ID
+│   └── ... Other .tif files corresponding to each LEAP ID
 ├── segmentations/ # Single nuclei segmentation maps (can also be created by the repo using the raw data)
 │   ├── LEAP015_segmentation_labels.tif
-│   └── ... Other .tif files for each LEAP ID
+│   └── ... Other .tif files corresponding to each LEAP ID
 ├── segmentations_after_qc/ # Single nuclei segmentation maps after quality control (can also be created by the repo using the raw data and segmentation maps)
 │   ├── LEAP015_segmentation_labels_qc.tif
-│   └── ... Other .tif files for each LEAP ID
+│   └── ... Other .tif files corresponding to each LEAP ID
 └── cohort_metadata.csv # Clinical metadata
 ```
 
