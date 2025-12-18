@@ -261,8 +261,6 @@ If you use this implementation in your research, please cite:
   doi={10.64898/2025.12.04.692131}
 }
 ```
-> Mealem, R. et al. Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer. 2025.12.04.692131 Preprint at https://doi.org/10.64898/2025.12.04.692131 (2025). 
-
 
 ## 10. Contact
 Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for comments or questions regarding this repo.
