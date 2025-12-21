@@ -87,9 +87,9 @@ BASE_DIR = "/your/full/path/to/analysis"
 
 ```bash
 TNBC-SPATIAL-CHROMATIN-COMPACTION/
-├── config/                               # Folder to manage fixed paths and experiment-level configuration settings
-│   ├── const.py                          # Path global constants
-│   └── params.py                         # Experiment parameters
+├── config/                               # Folder for code configurations such as paths and experiment-level configuration settings
+│   ├── const.py                          # Paths configuration
+│   └── params.py                         # Experiments configuration
 │
 ├── flim_analysis/                        # Main source code organized by functional domain
 │   ├── distribution_classification/      # Distribution-based classification using cross-validation and robust model evaluation techniques
@@ -103,7 +103,7 @@ TNBC-SPATIAL-CHROMATIN-COMPACTION/
 │   ├── analysis_paper_result_reproduce/  # Contains both main and supplementary figure notebooks
 │   └── usage_example/                    # Contains runnable examples demonstrating how to use the main components of the pipeline
 │
-├── sbatch/                               # Slurm job submission scripts for running tasks on the cluster
+├── sbatch/                               # SLURM job submission scripts for running tasks on HPC clusters
 ├── utils/                                # Helper functions used across the pipeline 
 ├── pyproject.toml
 └── environment.yml
