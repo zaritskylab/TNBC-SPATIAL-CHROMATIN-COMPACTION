@@ -1,6 +1,6 @@
 import os
 
-BASE_DIR = "/your/full/path/to/analysis" # Base directory for data, all analysis outputs and intermediate files.
+BASE_DIR = "/your/full/path/to/analysis" # Base directory for outputs and intermediate files.
 
 DATA_DIR = os.path.join(BASE_DIR, 'data')   # Root directory for all input data (raw, segmentations, image channels, metadata file).
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')   # Directory containing the original raw input data as downloaded.
