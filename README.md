@@ -11,11 +11,11 @@ Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>
 - __\*__ Equal contribution
 - __\&__ Co-corresponding authorship
 
-Organisation and dynamics of chromatin play a key role in regulation of cell state and function. In cancer, chromatin plasticity is known to be important in control of drug resistance, but the relationship between chromatin compaction and chemotherapy response within complex tissue settings remains unclear. Here, we measured single nuclei chromatin compaction using fluorescence lifetime imaging microscopy (FLIM) in situ in whole biopsies from 53 pre treatment and 14 post surgery tissue samples of human triple-negative breast cancer (TNBC) patients to determine whether single nuclei spatial chromatin compaction state can predict resistance to neoadjuvant chemotherapy (NACT). Bulk chromatin compaction across 53 pre-treatment core biopsies did not predict patient outcome. However, machine learning analysis revealed that a subset of patients exhibited distinct distributions of single nuclei with more open chromatin states, which was predictive of NACT-resistance.
+Organisation and dynamics of chromatin play a key role in regulation of cell state and function. In cancer, chromatin plasticity is known to be important in control of drug resistance, but the relationship between chromatin compaction and chemotherapy response within complex tissue settings remains unclear. Here, we measured single nuclei chromatin compaction using fluorescence lifetime imaging microscopy (FLIM) in situ in whole biopsies from 53 pre-treatment and 14 post-surgery tissue samples of human triple-negative breast cancer (TNBC) patients to determine whether single nuclei spatial chromatin compaction state can predict resistance to neoadjuvant chemotherapy (NACT). Bulk chromatin compaction across 53 pre-treatment core biopsies did not predict patient outcome. However, machine learning analysis revealed that a subset of patients exhibited distinct distributions of single nuclei with more open chromatin states, which was predictive of NACT-resistance.
 
 Graph neural network analysis established that the spatial arrangement of chromatin compaction contributed to prediction of NACT resistance and that chromatin compaction signatures were preserved in tissue state transitions from pre- to 14 post-NACT samples. Our findings shed new light on spatial control of chromatin structure and relationship to therapeutic resistance and establish a foundation for further molecular analysis of chromatin states in complex biological tissues.
 
-To read the full research paper go to the following link **[Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer](https://doi.org/10.64898/2025.12.04.692131)**
+To read the full research paper, go to the following link - **[Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer](https://doi.org/10.64898/2025.12.04.692131)**
 
 ## 2. Dataset Setup
 
@@ -42,7 +42,7 @@ FLIM/
 
 ### 2.2. Download
 
-Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine (339 files). The folder structure should match the one shown in the [Data overview section](#21-data-overview) (you can refer to the BioImage Archive's [download help guide](https://www.ebi.ac.uk/bioimage-archive/help-download/), which includes options for bulk download). After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this dir if you decide to run their code.
+Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418) to your local machine (339 files). The folder structure should match the one shown in the [Data overview section](#21-data-overview) (you can refer to the BioImage Archive's [download help guide](https://www.ebi.ac.uk/bioimage-archive/help-download/), which includes options for bulk download). After downloading, make sure you set the required input data directory specified in [config/const.py](config/const.py) by the `DATA_DIR` variable to where the data is stored on your local machine. Any data related computational outputs (segmentations, segmentations_after_qc) will also be saved in this directory if you decide to run the code.
 
 ```python
 DATA_DIR = "PATH-TO-THE-DATA"
@@ -110,7 +110,7 @@ TNBC-SPATIAL-CHROMATIN-COMPACTION/
 ```
 
 ## 6. Direct Script Run
-**You should run the scripts by the order given here as some depend on others (unless stated that it is not required).**
+**You should run the scripts in the order given here as some depend on others (unless explicitly stated as not required).**
 
 ### Preprocessing
 ```bash
@@ -199,7 +199,7 @@ Each notebook may depend on earlier processing, and any such dependencies are no
 
 ## 8. Reproducible Notebooks
 The notebooks under `notebooks/analysis_paper_result_reproduc/` are used to recreate the figures presented in the paper.
-They are organized by figure number — contains both **main** and **supplementary** figure notebooks:
+They are organized by figure number and contain both **main-figure** and **supplementary-figure** notebooks:
 - `_preparation.ipynb` vs `_visualize.ipynb` convention used for clean separation between data generation and plotting
 - `Figure_1.ipynb` – `Figure_4.ipynb`: Main paper figures
 - `Supplementary/`: Supplementary figure generation and visualization notebooks
@@ -211,8 +211,7 @@ This repository is released under the Creative Commons Attribution–NonCommerci
 
 ## 10. Citation
 
-If you use this code, please cite:
-If you use this implementation in your research, please cite:
+If you use this code or implementation in your research, please cite:
 
 ```bibtex
 @article{mealem2025spatial,
