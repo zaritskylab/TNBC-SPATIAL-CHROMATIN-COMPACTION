@@ -1,6 +1,6 @@
 # Spatially distinct chromatin compaction states predict neoadjuvant chemotherapy resistance in Triple Negative Breast Cancer
 
-This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides reproducible notebooks to recreate the paper’s results alongside scripts [(see Direct Script Run)](#7-direct-script-run) and usage examples [(see Notebook Examples)](#6-notebook-examples) that enable running individual stages of the pipeline.
+This repository implements an analysis pipeline for TNBC FLIM data, including preprocessing and nuclei segmentation, feature extraction, classification models for predicting neoadjuvant chemotherapy resistance and spatial analysis [(see Repository overview)](#5-repository-overview). It also provides scripts [(see Direct Script Run)](#6-direct-script-run) and usage examples [(see Notebook Examples)](#7-notebook-examples) that enable running individual stages of the pipeline, alongside [reproducible notebooks](#8-reproducible-notebooks) to recreate the paper’s results.
 
 ## 1. Manuscript Abstract
 Reut Mealem<sup>1*</sup>, Thomas. A. Phillips<sup>2*</sup>, Leor Ariel Rose<sup>1*</sup>, Stefania Marcotti<sup>2</sup>, Maddy Parsons<sup>2&</sup>, Assaf Zaritsky<sup>1&</sup>
@@ -47,7 +47,7 @@ Download the dataset from [BioImage Archive](https://doi.org/10.6019/S-BIAD2418)
 ```python
 DATA_DIR = "PATH-TO-THE-DATA"
 ```
-By default, in our code this path is defined relative to the base analysis directory like so:
+By default, in our code this path is defined relative to the `BASE_DIR` directory like so:
 ```python
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 ```
@@ -87,87 +87,29 @@ BASE_DIR = "/your/full/path/to/analysis"
 
 ```bash
 TNBC-SPATIAL-CHROMATIN-COMPACTION/
-├── config/
-│   ├── const.py
-│   └── params.py
+├── config/                               # Folder to manage fixed paths and experiment-level configuration settings
+│   ├── const.py                          # Path global constants
+│   └── params.py                         # Experiment parameters
 │
-├── flim_analysis/
-│   ├── distribution_classification/
-│   ├── feature_extraction/
-│   ├── gnn_classification/
-│   ├── preprocessing/
-│   ├── resection_analysis/
-│   └── spatial_analysis/
+├── flim_analysis/                        # Main source code organized by functional domain
+│   ├── distribution_classification/      # Distribution-based classification using cross-validation and robust model evaluation techniques
+│   ├── feature_extraction/               # Scripts for extracting FLIM and morphological features at both the patch and full-tissue level
+│   ├── gnn_classification/               # End-to-end GNN pipeline
+│   ├── preprocessing/                    # Tissue segmentation and preprocessing workflows to prepare input for feature extraction
+│   ├── resection_analysis/               # Contains Jupyter notebooks related to resection-based spatial analysis
+│   └── spatial_analysis/                 # Contains spatial metrics and related analysis. Some data preparation is also done in the notebook `spatial_analysis/spatial_information.ipynb`
 │
-├── notebooks/
-│   ├── analysis_paper_result_reproduce/
-│   └── usage_example/
+├── notebooks/                            # Top-level directory for exploratory and paper-figure creation notebooks
+│   ├── analysis_paper_result_reproduce/  # Contains both main and supplementary figure notebooks
+│   └── usage_example/                    # Contains runnable examples demonstrating how to use the main components of the pipeline
 │
-├── sbatch/
-├── utils/
+├── sbatch/                               # Slurm job submission scripts for running tasks on the cluster
+├── utils/                                # Helper functions used across the pipeline 
 ├── pyproject.toml
 └── environment.yml
 ```
 
-### `config/`
-Use this folder to manage fixed paths and experiment-level configuration settings.
-
-Contains configuration files:
-- `const.py`: path global constants
-- `params.py`: experiment parameters
-
-
-### `flim_analysis/`
-Main source code organized by functional domain:
-
-#### `preprocessing/`
-Tissue segmentation and preprocessing workflows to prepare input for feature extraction.
-
-#### `feature_extraction/`
-Scripts for extracting FLIM and morphological features at both the patch and full-tissue level.
-
-#### `distribution_classification/`
-Distribution-based classification using cross-validation and robust model evaluation techniques.
-
-#### `gnn_classification/`
-End-to-end GNN pipeline, subdivided into:
-- `build_graphs/`: construct graphs from extracted features
-- `create_pytorch_geo_data/`: process graphs into PyTorch Geometric format
-- `train_model/`: training and evaluation of GNNs
-
-#### `spatial_analysis/`
-Contains spatial metrics and related analysis. Some data preparation is also done in the notebook `spatial_analysis/spatial_information.ipynb`
-
-#### `resection_analysis/`
-Contains Jupyter notebooks related to resection-based spatial analysis.
-
-### `notebooks/`
-Top-level directory for exploratory and paper-figure creation notebooks.
-
-#### `analysis_paper_result_reproduce/`
-Organized by figure number — contains both **main** and **supplementary** figure notebooks:
-- `_preparation.ipynb` vs `_visualize.ipynb` convention used for clean separation between data generation and plotting
-- `Figure_1.ipynb` – `Figure_4.ipynb`: Main paper figures
-- `Supplementary/`: Supplementary figure generation and visualization notebooks
-
-#### `usage_example/`
-Contains runnable examples demonstrating how to use the main components of the pipeline.
-
-## 6. Notebook Examples
-The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
-
-- `run_example_preprocess_segmentation.ipynb`  
-  Demonstrates data preprocessing, segmentation and segmentation quality control.
-
-- `run_example_feature_extraction.ipynb`  
-  Shows how to run feature extraction on preprocessed and segmented data.
-
-- `run_example_gnn_build_train.ipynb`  
-  Builds graphs and trains the GNN model using extracted features.
-
-Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
-
-## 7. Direct Script Run
+## 6. Direct Script Run
 **You should run the scripts by the order given here as some depend on others (unless stated that it is not required).**
 
 ### Preprocessing
@@ -177,7 +119,7 @@ python flim_analysis/preprocessing/processing.py
 ```
 ### Segmentation
 ```bash
-# NOTE: This step is not required as data folder already contains segmentations. 
+# IMPORTANT NOTE: This step is not required as data folder already contains segmentations. 
 # Running this script will overwrite the existing data segmentation outputs in SEG_DIR and SEG_AFTER_QC_DIR.
 python flim_analysis/preprocessing/segmentation.py
 ```
@@ -213,9 +155,9 @@ python flim_analysis/feature_extraction/create_distribution_and_median.py patch 
 python flim_analysis/distribution_classification/treatment_classification_patch_wise --dist_csv_name features_lifetime_distribution_data_patches_size_1500_overlap_0.75_max_val_13_bins_amount_18_bin_range_0.73.csv --patch_size 1500 --n_seeds 100 --n_permutations 1000
 ```
 
-### GNN Classification
+### GNN classification
 ```bash
-# Graphs building for GNN training
+# Graphs building for GNN training - construct graphs from extracted features
 python flim_analysis/gnn_classification/build_graphs/build_graph_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30
 ```
 
@@ -225,7 +167,7 @@ python flim_analysis/gnn_classification/create_pytorch_geo_data/process_data_pyt
 ```
 
 ```bash
-# GNN training
+# Training and evaluation of GNNs
 python flim_analysis/gnn_classification/train_model/train_gnn_model_main.py gnn --patch-size 1500 --overlap 0.75 --feature_type 'lifetime' --max_dist 30 --k-fold 5 --model-id 1 --n_seeds 20
 ```
 
@@ -240,12 +182,34 @@ python flim_analysis/feature_extraction/extract_features.py resection
 python flim_analysis/feature_extraction/create_distribution_and_median.py resection
 ```
 
+## 7. Notebook Examples
+The `notebooks/usage_example` folder contains three Jupyter notebooks that illustrate three main parts of the analysis workflow:
 
-## 8. License
+- `run_example_preprocess_segmentation.ipynb`  
+  Demonstrates data preprocessing, segmentation and segmentation quality control.
+
+- `run_example_feature_extraction.ipynb`  
+  Shows how to run feature extraction on preprocessed and segmented data.
+
+- `run_example_gnn_build_train.ipynb`  
+  Builds graphs and trains the GNN model using extracted features.
+
+Each notebook may depend on earlier processing, and any such dependencies are noted at the beginning.
+
+
+## 8. Reproducible Notebooks
+The notebooks under `notebooks/analysis_paper_result_reproduc/` are used to recreate the figures presented in the paper.
+They are organized by figure number — contains both **main** and **supplementary** figure notebooks:
+- `_preparation.ipynb` vs `_visualize.ipynb` convention used for clean separation between data generation and plotting
+- `Figure_1.ipynb` – `Figure_4.ipynb`: Main paper figures
+- `Supplementary/`: Supplementary figure generation and visualization notebooks
+
+
+## 9. License
 
 This repository is released under the Creative Commons Attribution–NonCommercial 4.0 International License. See [LICENSE](LICENSE) for details. Commercial use is not permitted, and any reuse or modification requires proper attribution to the original authors.
 
-## 9. Citation
+## 10. Citation
 
 If you use this code, please cite:
 If you use this implementation in your research, please cite:
@@ -262,5 +226,5 @@ If you use this implementation in your research, please cite:
 }
 ```
 
-## 10. Contact
+## 11. Contact
 Please contact <reutme@post.bgu.ac.il> or <assafzar@gmail.com> for comments or questions regarding this repo.
